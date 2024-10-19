@@ -3,5 +3,11 @@
         "laravel/framework": "^11.28",
         "doctrine/dbal": "^3.6",
         "laravel/tinker": "^2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
     }
 }
+
