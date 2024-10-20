@@ -52,7 +52,6 @@ nav ul {
     white-space: nowrap; /* Zalamovanie textu block? */
 }
 
-
 nav ul li {
     display: inline-block;
 }
@@ -61,7 +60,7 @@ nav ul li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    font-size: 0.7rem; /* velkosť písma */
+    font-size: 0.7rem; /* veľkosť písma */
     padding: 8px 16px;
     transition: background 0.3s, color 0.3s;
     background: transparent; /* Odstránenie pozadia */
@@ -80,21 +79,21 @@ nav ul li:first-child {
 }
 
 nav ul li a:hover {
-    background: rgba(255, 255, 255, 0.2); /* Svetlejšie pozadie */
-    color: #ffd700; /* Zlatá farba textu */
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffd700;
 }
 
 /* Logo */
 header .logo img {
     width: 100%;
-    height: auto; /* logo size */
+    height: auto;
     margin-bottom: 10px;
     object-fit: cover;
 }
 
 .background-image {
-    background-size: cover; /* Vyplní celý priestor */
-    background-position: center; /* Umiestni obrázok na stred */
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat; /* Zabráni opakovaniu obrázku */
     height: 100vh; /* Nastaví výšku na 100% viewportu */
     position: relative; /* Potrebné pre absolútnu pozíciu klikateľných obrázkov */
@@ -105,6 +104,16 @@ header .logo img {
     .background-image {
         background-position: top;
         background-size: contain;
+        height: 50vh; /* Zníženie výšky pre menšie obrazovky */
+    }
+
+    nav ul {
+        flex-wrap: wrap; /* Umožniť zabalovanie položiek */
+    }
+
+    nav ul li {
+        flex: 1 1 auto; /* Umožniť rozšírenie položiek */
+        text-align: center; /* Vycentrovať text */
     }
 }
 
@@ -270,7 +279,8 @@ footer a:hover {
     border-radius: 5px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    width: 300px; /* šírka boxu */
+    width: 90%; /* Šírka boxu pre mobil */
+    max-width: 400px; /* Maximálna šírka pre desktop */
 }
 
 .order-box h2 {
@@ -307,10 +317,3 @@ footer a:hover {
 .order-box button:hover {
     background-color: #e6c300;
 }
-
-
-
-
-
-
-
