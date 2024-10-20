@@ -5,38 +5,52 @@ body, h1, h2, p, ul {
 }
 
 /* Základ */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #1a1a1a; /* Dark background for the whole page */
-    color: #ffffff; /* White text for better readability */
+    background-color: #1a1a1a;
+    color: #ffffff;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
-/* responzívne headery - toto je len príklad
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 36px; /* Menší heading pre mobil
-    }
-
-    .hero h2 {
-        font-size: 24px; /* Menší subheading pre mobil
-    }
+/* Hlavný obsah */
+main {
+    flex: 1;
+    padding: 20px;
 }
-*/
 
-/* Header */
 header {
-    background-color: #2c2f33;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 10px 0;
+    text-align: center;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.6); /* Jemne priehľadné čierne pozadie */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Jemný tieň pod navigáciou */
+    border-radius: 5px;
 }
 
+/* Navigačný panel */
 nav ul {
     list-style: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 0 60px;
+    gap: 5px; /* Rozostup medzi položkami */
+    padding: 0;
     margin: 0;
+    white-space: nowrap; /* Zalamovanie textu block? */
 }
+
 
 nav ul li {
     display: inline-block;
@@ -46,32 +60,107 @@ nav ul li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    font-size: 0.9rem;
-    padding: 10px;
+    font-size: 0.7rem; /* velkosť písma */
+    padding: 8px 16px;
+    transition: background 0.3s, color 0.3s;
+    background: transparent; /* Odstránenie pozadia */
+    border-radius: 5px;
 }
 
-nav ul li img {
-    height: 40px;
+nav ul li a img {
+    height: 60px; /* logo */
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Vytvorenie väčšej medzery medzi logom a textom */
+nav ul li:first-child {
+    margin-right: 30px;
 }
 
 nav ul li a:hover {
-    color: #ffd700;
+    background: rgba(255, 255, 255, 0.2); /* Svetlejšie pozadie */
+    color: #ffd700; /* Zlatá farba textu */
 }
 
-/* Footer Styles */
+/* Logo */
+header .logo img {
+    width: 100%;
+    height: auto; /* logo size */
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.background-image {
+    background-size: cover; /* Vyplní celý priestor */
+    background-position: center; /* Umiestni obrázok na stred */
+    background-repeat: no-repeat; /* Zabráni opakovaniu obrázku */
+    height: 100vh; /* Nastaví výšku na 100% viewportu */
+    position: relative; /* Potrebné pre absolútnu pozíciu klikateľných obrázkov */
+}
+
+/* Responsive background image */
+@media (max-width: 768px) {
+    .background-image {
+        background-position: top;
+        background-size: contain;
+    }
+}
+
+/* Klikateľné obrázky */
+.clickable-image {
+    position: absolute;
+    top: 80%;
+    transform: translateY(-50%);
+    z-index: 20; /* Zabezpečí, že sú nad pozadím */
+}
+
+/* Odsadenie pre klikateľné obrázky */
+.clickable-image.left {
+    left: 10%; /* odsadenie */
+}
+
+.clickable-image.right {
+    right: 10%;
+}
+
+/* Veľkosť obrázkov */
+.clickable-image img {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    transition: transform 0.3s, width 0.3s; /* Umožni prechod pri zmene veľkosti */
+}
+
+/* Hover efekt */
+.clickable-image img:hover {
+    transform: scale(1.1);
+}
+
+/* Prispôsobenie pre menšie obrazovky */
+@media (max-width: 768px) {
+    .clickable-image {
+        top: 40%; /* Umiestnenie obrázkov */
+    }
+
+    .clickable-image img {
+        width: 30%; /* Zmenšenie na menších obrazovkách */
+    }
+}
+
+@media (max-width: 480px) {
+    .clickable-image img {
+        width: 40%; /* Ďalšie zmenšenie na veľmi malých obrazovkách */
+    }
+}
+
+/* Footer */
 footer {
     background-color: #333;
     color: #fff;
-    text-align: left;
+    text-align: center;
     padding: 10px 20px;
     font-size: 0.8rem;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
-footer p {
-    margin-bottom: 0;
 }
 
 footer a {
@@ -82,4 +171,3 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-
