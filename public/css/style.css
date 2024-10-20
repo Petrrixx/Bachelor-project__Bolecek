@@ -8,6 +8,7 @@ body, h1, h2, p, ul {
 html, body {
     height: 100%;
     margin: 0;
+    overflow-y: auto;
 }
 
 body {
@@ -171,3 +172,145 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+.cut-background {
+    background-size: cover;
+    background-position: center;
+    min-height: 300px; /* Minimálna výška pozadia */
+    width: 100%;
+    position: relative;
+}
+
+.centered-image {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.centered-image img {
+    width: 50%;
+    height: auto;
+}
+
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Rezervácie formulár */
+.reservation-form {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px auto;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.reservation-form input,
+.reservation-form select,
+.reservation-form button {
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.reservation-form button {
+    background-color: #ffd700;
+    color: black;
+    cursor: pointer;
+}
+
+.reservation-form button:hover {
+    background-color: #e6c300;
+}
+
+/* Fotogaléria */
+.photo-gallery {
+    text-align: center;
+    padding: 20px;
+}
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s;
+}
+
+.gallery-item img:hover {
+    transform: scale(1.05);
+}
+
+/* Objednávky */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.order-box {
+    background-color: #2a2a2a;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    width: 300px; /* šírka boxu */
+}
+
+.order-box h2 {
+    margin-bottom: 15px;
+}
+
+.order-box label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.order-box input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.order-box button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffd700;
+    color: #1a1a1a;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.order-box button:hover {
+    background-color: #e6c300;
+}
+
+
+
+
+
+
+

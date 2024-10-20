@@ -17,7 +17,7 @@
 
 
     {{-- Obsah pod pozadím --}}
-    <div class="content">
+    <div class="content" style="margin-top: 20px;">
         <h1>Vitajte na stránke Gazdovského dvora!</h1>
         <p>Toto je úvodná stránka.</p>
     </div>
