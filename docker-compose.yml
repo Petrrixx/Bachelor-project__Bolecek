@@ -1,17 +1,27 @@
+version: '3.8'
+
 services:
-    mysql:
-        image: mysql:latest
-        container_name: mysql-container
+    app:
+        container_name: app-container
+        build:
+            context: .
+            dockerfile: Dockerfile-app
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: laravel
-        ports:
-            - "3306:3306"
+            - SUPABASE_URL=https://your-project.supabase.co
+            - SUPABASE_ANON_KEY=your-anon-key
+        depends_on:
+            - vite
         volumes:
-            - mysql-data:/var/lib/mysql
+            - .:/var/www/html
+        ports:
+            - "8000:80"
 
-volumes:
-    mysql-data:
-
-
-
+    vite:
+        container_name: vite-container
+        build:
+            context: .
+            dockerfile: Dockerfile-vite
+        depends_on:
+            - app
+        ports:
+            - "5173:5173"
