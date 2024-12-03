@@ -1,27 +1,26 @@
-version: '3.8'
-
 services:
     app:
-        container_name: app-container
         build:
             context: .
-            dockerfile: Dockerfile-app
-        environment:
-            - SUPABASE_URL=https://your-project.supabase.co
-            - SUPABASE_ANON_KEY=your-anon-key
-        depends_on:
-            - vite
+            dockerfile: Dockerfile-app  # Tento Dockerfile pre PHP (Laravel aplikáciu)
+        container_name: laravel_app
+        ports:
+            - "8000:80"  # Laravel bude dostupný na localhost:8000
         volumes:
             - .:/var/www/html
-        ports:
-            - "8000:80"
+        environment:
+            DB_CONNECTION: pgsql
+            DB_HOST: ${DB_HOST}  # Pripojenie na Supabase
+            DB_PORT: ${DB_PORT}
+            DB_DATABASE: ${DB_DATABASE}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_SCHEMA: ${DB_SCHEMA}
+            SUPABASE_URL: ${SUPABASE_URL}
+            SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+        networks:
+            - app_network  # Táto sieť bude automaticky vytvorená Dockerom
 
-    vite:
-        container_name: vite-container
-        build:
-            context: .
-            dockerfile: Dockerfile-vite
-        depends_on:
-            - app
-        ports:
-            - "5173:5173"
+networks:
+    app_network:  # Definujeme sieť, ale nemusíme špecifikovať driver, ak nevyžaduje konkrétny
+        driver: bridge

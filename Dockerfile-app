@@ -1,6 +1,8 @@
 FROM php:8.2-fpm
 
 WORKDIR /var/www/html
+
+# Aktualizácia a inštalácia závislostí
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -8,16 +10,30 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libzip-dev \
+    libpq-dev \
     zip \
+    libzip-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip \
+    && docker-php-ext-install gd pdo_pgsql pgsql zip \
     && rm -rf /var/lib/apt/lists/*
 
+# Inštalácia Composeru
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+
+# Skopírovanie celého projektu do kontajnera
 COPY . .
+
+# Zmena používateľa na www-data pred spustením Composer
 RUN chown -R www-data:www-data /var/www/html
 USER www-data
+
+# Inštalácia PHP závislostí
+RUN composer install --no-dev --optimize-autoloader
+
+# Oprávnenia pre Laravel
+USER root
+RUN chown -R www-data:www-data /var/www/html
+USER www-data
+
 EXPOSE 8000
+CMD ["php-fpm"]
