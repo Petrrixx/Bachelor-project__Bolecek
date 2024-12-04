@@ -1,4 +1,4 @@
-@extends('layouts.cutbg')
+@extends('layouts.base')
 
 @section('title', "Kontakty")
 

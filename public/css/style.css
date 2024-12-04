@@ -27,141 +27,58 @@ main {
     padding: 20px;
 }
 
+/* Hlavný navigačný panel */
 header {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     padding: 10px 0;
     text-align: center;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.6); /* Jemne priehľadné čierne pozadie */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Jemný tieň pod navigáciou */
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
 }
 
-/* Navigačný panel */
+/* Navigačný panel - list */
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px; /* Rozostup medzi položkami */
+    gap: 10px;
     padding: 0;
     margin: 0;
-    white-space: nowrap; /* Zalamovanie textu block? */
 }
 
-nav ul li {
-    display: inline-block;
-}
-
+/* Navigačný odkaz */
 nav ul li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    font-size: 0.7rem; /* veľkosť písma */
+    font-size: 1rem;
     padding: 8px 16px;
     transition: background 0.3s, color 0.3s;
-    background: transparent; /* Odstránenie pozadia */
+    background: transparent;
     border-radius: 5px;
 }
 
 nav ul li a img {
-    height: 60px; /* logo */
+    height: 60px;
     width: auto;
     vertical-align: middle;
 }
 
-/* Vytvorenie väčšej medzery medzi logom a textom */
+/* Zabezpečenie väčšej medzery medzi logom a textom */
 nav ul li:first-child {
     margin-right: 30px;
 }
 
+/* Hover efekt na navigačných odkazoch */
 nav ul li a:hover {
     background: rgba(255, 255, 255, 0.2);
     color: #ffd700;
-}
-
-/* Logo */
-header .logo img {
-    width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-    object-fit: cover;
-}
-
-.background-image {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat; /* Zabráni opakovaniu obrázku */
-    height: 100vh; /* Nastaví výšku na 100% viewportu */
-    position: relative; /* Potrebné pre absolútnu pozíciu klikateľných obrázkov */
-}
-
-/* Responsive background image */
-@media (max-width: 768px) {
-    .background-image {
-        background-position: top;
-        background-size: contain;
-        height: 50vh; /* Zníženie výšky pre menšie obrazovky */
-    }
-
-    nav ul {
-        flex-wrap: wrap; /* Umožniť zabalovanie položiek */
-    }
-
-    nav ul li {
-        flex: 1 1 auto; /* Umožniť rozšírenie položiek */
-        text-align: center; /* Vycentrovať text */
-    }
-}
-
-/* Klikateľné obrázky */
-.clickable-image {
-    position: absolute;
-    top: 80%;
-    transform: translateY(-50%);
-    z-index: 20; /* Zabezpečí, že sú nad pozadím */
-}
-
-/* Odsadenie pre klikateľné obrázky */
-.clickable-image.left {
-    left: 10%; /* odsadenie */
-}
-
-.clickable-image.right {
-    right: 10%;
-}
-
-/* Veľkosť obrázkov */
-.clickable-image img {
-    width: 100%;
-    height: auto;
-    max-width: 250px;
-    transition: transform 0.3s, width 0.3s; /* Umožni prechod pri zmene veľkosti */
-}
-
-/* Hover efekt */
-.clickable-image img:hover {
-    transform: scale(1.1);
-}
-
-/* Prispôsobenie pre menšie obrazovky */
-@media (max-width: 768px) {
-    .clickable-image {
-        top: 40%; /* Umiestnenie obrázkov */
-    }
-
-    .clickable-image img {
-        width: 30%; /* Zmenšenie na menších obrazovkách */
-    }
-}
-
-@media (max-width: 480px) {
-    .clickable-image img {
-        width: 40%; /* Ďalšie zmenšenie na veľmi malých obrazovkách */
-    }
 }
 
 /* Footer */
@@ -182,30 +99,7 @@ footer a:hover {
     text-decoration: underline;
 }
 
-.cut-background {
-    background-size: cover;
-    background-position: center;
-    min-height: 300px; /* Minimálna výška pozadia */
-    width: 100%;
-    position: relative;
-}
-
-.centered-image {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.centered-image img {
-    width: 50%;
-    height: auto;
-}
-
-.responsive-image {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Rezervácie formulár */
+/* Kontrolky formulára */
 .reservation-form {
     background-color: #333;
     color: white;
@@ -220,10 +114,9 @@ footer a:hover {
 .reservation-form input,
 .reservation-form select,
 .reservation-form button {
-    width: calc(100% - 20px);
+    width: 100%;
     margin: 10px 0;
     padding: 10px;
-    border: none;
     border-radius: 5px;
 }
 
@@ -237,83 +130,72 @@ footer a:hover {
     background-color: #e6c300;
 }
 
-/* Fotogaléria */
-.photo-gallery {
-    text-align: center;
-    padding: 20px;
-}
-
-.gallery-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.gallery-item {
-    overflow: hidden;
-    border-radius: 5px;
-}
-
-.gallery-item img {
-    width: 100%;
-    height: auto;
-    transition: transform 0.3s;
-}
-
-.gallery-item img:hover {
-    transform: scale(1.05);
-}
-
-/* Objednávky */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-.order-box {
-    background-color: #2a2a2a;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    width: 90%; /* Šírka boxu pre mobil */
-    max-width: 400px; /* Maximálna šírka pre desktop */
-}
-
-.order-box h2 {
-    margin-bottom: 15px;
-}
-
-.order-box label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.order-box input {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #1a1a1a;
+/* Animácia a efekt pre modálne okná */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #333;
     color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    display: none; /* Skryté pred zobrazením */
+    z-index: 100;
 }
 
-.order-box button {
+.modal.show {
+    display: block; /* Zobraziť modálne okno */
+}
+
+/* Skryté modálne okno */
+.modal {
+    display: none; /* Skryté na začiatku */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999; /* Zabezpečí, že modálne okno je nad ostatným obsahom */
+}
+
+/* Pozadie modálneho okna */
+.modal > div {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
     width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #ffd700;
-    color: #1a1a1a;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
 }
 
-.order-box button:hover {
-    background-color: #e6c300;
+#login-btn {
+    /* Umiestnenie tlačítka fixované v pravom hornom rohu */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: #000;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
+
+#login-btn:hover {
+    background-color: #333;
+}
+
+/* Zatvoriť modálne okno */
+#close-modal-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
