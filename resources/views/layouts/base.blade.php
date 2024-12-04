@@ -6,7 +6,7 @@
     <title>@yield('title', 'Nedefinovaný názov')</title>
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-    <!-- css úprava pretože v styles.css mi asset nevie nájsť obrázky -->
+    <!-- Dynamické pozadie v style tagu -->
     <style>
         /* Dynamické pozadie pre index */
         @if (request()->is('/'))
@@ -75,10 +75,86 @@
             font-size: 0.8rem;
             margin-top: auto;  /* Toto zabezpečí, že footer bude na spodku */
         }
+
+        /* Modálne okno štýl */
+        .modal {
+            display: none; /* Skryté podľa predvolieb */
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Polopriesvitný tmavý pozadie */
+            justify-content: center;
+            align-items: center;  /* Vertikálne aj horizontálne vycentrované */
+            display: flex; /* Používame flexbox na centerovanie */
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px; /* Určuje maximálnu šírku okna */
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #444;
+        }
+
+        /* Tlačítko prihlásenia */
+        #login-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #login-btn:hover {
+            background-color: #333;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
 
+<!-- Pozadie celé na obrazovke -->
 <div class="background-full"></div>
 
 <!-- Polopriesvitná čierna vrstva pre lepšiu čitateľnosť textu -->
@@ -88,15 +164,14 @@
 
 <!-- Tlačítko prihlásenia, ktoré bude fixované v pravom hornom rohu -->
 @auth
-    <!-- Ak je používateľ prihlásený, zobrazí sa tlačidlo na odhlásenie -->
-    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-        @csrf
-        <button type="submit" class="text-white font-semibold hover:text-yellow-400 transition duration-200">
-            Odhlásiť sa
-        </button>
-    </form>
+    <li>
+        <a href="{{ url('/profile') }}" class="text-white hover:text-yellow-400 transition duration-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m0 0l-4 4m4-4l-4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </a>
+    </li>
 @else
-    <!-- Tlačidlo prihlásenia pre neprihlásených používateľov -->
     <button id="login-btn" class="fixed top-4 right-4 text-white bg-black hover:bg-gray-700 py-2 px-4 rounded-full transition duration-200">
         Prihlásiť sa
     </button>
@@ -123,40 +198,52 @@
 
 <footer class="bg-gray-800 text-white text-center p-4">
     <p>&copy; 2024 Gazdovský dvor. Všetky práva vyhradené.</p>
-    <p><a href="{{ url('/privacy') }}" class="text-white hover:underline">Ochrana súkromia</a></p>
+    <p><a href="{{ url('/privacy') }}" class="text-white hover:underline">Ochrana osobných údajov</a> | <a href="{{ url('/terms') }}" class="text-white hover:underline">Podmienky použitia</a></p>
 </footer>
 
-<!-- JavaScript pre modálne okná a validáciu -->
+<!-- Modálne okno pre prihlásenie -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-login-modal" class="close-btn">&times;</span>
+        <h2 class="text-center text-xl font-semibold">Prihlásiť sa</h2>
+        <form action="{{ route('login.submit') }}" method="POST">
+            @csrf
+            <div class="mb-4">
+                <label for="email" class="block text-sm">Email</label>
+                <input type="email" name="email" id="email" class="input-field" required>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm">Heslo</label>
+                <input type="password" name="password" id="password" class="input-field" required>
+            </div>
+            <button type="submit" class="btn-submit">Prihlásiť sa</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript pre modálne okná -->
 <script>
-    const loginBtn = document.getElementById('login-btn');
-    const loginModal = document.getElementById('login-modal');
-    const registerModal = document.getElementById('register-modal');
+    document.addEventListener("DOMContentLoaded", function() {
+        const loginBtn = document.getElementById('login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModalBtn = document.getElementById('close-login-modal');
 
-    // Zobrazenie modálneho okna pre prihlásenie
-    loginBtn.addEventListener('click', function() {
-        loginModal.classList.remove('hidden');
-    });
+        // Ukáž modálne okno pri kliknutí na tlačidlo "Prihlásiť sa"
+        loginBtn.addEventListener('click', function() {
+            loginModal.style.display = 'flex';  // Zobraz modálne okno
+        });
 
-    // Funkcia na skrytie okna po kliknutí mimo neho
-    window.onclick = function(event) {
-        if (event.target === loginModal || event.target === registerModal) {
-            loginModal.classList.add('hidden');
-            registerModal.classList.add('hidden');
-        }
-    }
+        // Skryť modálne okno pri kliknutí na tlačidlo "Zatvoriť"
+        closeLoginModalBtn.addEventListener('click', function() {
+            loginModal.style.display = 'none';  // Skry modálne okno
+        });
 
-    // Prihlásenie a registrácia - kontrola prázdnych polí
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        // Validácia
-        if (!email || !password) {
-            alert('Prosím, vyplňte všetky polia.');
-            return;
-        }
-        this.submit();
+        // Skryť modálne okno pri kliknutí mimo okna
+        window.addEventListener('click', function(event) {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';  // Skry modálne okno
+            }
+        });
     });
 </script>
 
