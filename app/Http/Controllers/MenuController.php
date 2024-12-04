@@ -18,7 +18,7 @@ class MenuController extends Controller
 
     public function viewReservations()
     {
-        return view('reservations');
+        return view('reservation/reservations');
     }
 
     public function viewPhotoGallery()
@@ -29,5 +29,10 @@ class MenuController extends Controller
     public function viewContact()
     {
         return view('contact');
+    }
+
+    public function viewAuth()
+    {
+        return view("auth/auth");
     }
 }

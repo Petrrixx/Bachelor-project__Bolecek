@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Nedefinovaný názov')</title>
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-    <!-- Dynamické pozadie v style tagu -->
+    <!-- Načítanie Vite súborov -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
-        /* Dynamické pozadie pre index */
         @if (request()->is('/'))
             .background-full {
             background-image: url('{{ asset('images/background2.JPEG') }}');
@@ -48,7 +48,7 @@
 
         /* Zabezpečenie, že footer bude vždy na spodku */
         html, body {
-            height: 100%;  /* Celková výška stránky bude 100% */
+            height: 100%;
             margin: 0;
             display: flex;
             flex-direction: column;  /* Flexbox, aby sme mohli footer prichytiť na spodok */
@@ -59,14 +59,17 @@
             background-color: #1a1a1a;
             color: #ffffff;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* Hlavný obsah */
         main {
             flex: 1;  /* Toto zabezpečí, že hlavný obsah zaberá všetok dostupný priestor */
             padding: 20px;
             overflow: auto;
         }
 
+        /* Footer */
         footer {
             background-color: #333;
             color: #fff;
@@ -76,28 +79,143 @@
             margin-top: auto;  /* Toto zabezpečí, že footer bude na spodku */
         }
 
-        /* Modálne okno štýl */
-        .modal {
-            display: none; /* Skryté podľa predvolieb */
+        footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hlavný navigačný panel */
+        header {
             position: fixed;
-            z-index: 1050;
-            left: 0;
             top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 1200px; /* Maximálna šírka pre navigačný panel */
+        }
+
+        /* Navigačný panel - list */
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Navigačný odkaz */
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 8px 16px;
+            transition: background 0.3s, color 0.3s;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li a img {
+            height: 40px; /* Zmenšená výška loga */
+            width: auto;
+            vertical-align: middle;
+        }
+
+        /* Hover efekt na navigačných odkazoch */
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffd700;
+        }
+
+        /* Tlačidlá prihlásenia, profilu a správy užívateľov */
+        #login-btn, #profile-btn, #users-management-btn, #logout-btn {
+            position: fixed;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 1001; /* Vyšší z-index ako header */
+            font-size: 0.9rem;
+        }
+
+        #login-btn {
+            background-color: #000;
+            color: #fff;
+            right: 20px;
+            top: 20px;
+        }
+
+        #profile-btn {
+            background-color: #28a745;
+            color: #fff;
+            right: 30px; /* Upravená pozícia */
+            top: 20px;
+        }
+
+        #users-management-btn {
+            background-color: #007bff;
+            color: #fff;
+            right: 20px;
+            top: 150px;
+        }
+
+        #logout-btn {
+            background-color: #dc3545;
+            color: #fff;
+            right: 20px; /* Upravená pozícia */
+            top: 90px;
+        }
+
+        #login-btn:hover {
+            background-color: #333;
+        }
+
+        #profile-btn:hover {
+            background-color: #218838;
+        }
+
+        #users-management-btn:hover {
+            background-color: #0069d9;
+        }
+
+        #logout-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Modal */
+        .modal {
+            display: none; /* Skryté pred zobrazením */
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.6); /* Polopriesvitný tmavý pozadie */
             justify-content: center;
-            align-items: center;  /* Vertikálne aj horizontálne vycentrované */
-            display: flex; /* Používame flexbox na centerovanie */
+            align-items: center;
+            z-index: 1050; /* Vyšší z-index ako tlačidlá */
         }
 
         .modal-content {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px; /* Určuje maximálnu šírku okna */
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
             position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
         .close-btn {
@@ -108,47 +226,101 @@
             cursor: pointer;
         }
 
-        .input-field {
-            width: 100%;
-            padding: 10px;
+        /* Formulárové Polia a Karty */
+        .card {
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .form-control {
+            height: 45px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 1rem;
+            padding-left: 15px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .btn-submit {
             width: 100%;
-            padding: 10px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        .btn-submit:hover {
-            background-color: #444;
-        }
-
-        /* Tlačítko prihlásenia */
-        #login-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #login-btn:hover {
+        .form-control:focus {
+            border-color: #FF5733;
+            box-shadow: 0 0 10px rgba(255, 87, 51, 0.6);
             background-color: #333;
+        }
+
+        /* Submit Button */
+        .btn-block {
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Chybová Správa */
+        .invalid-feedback {
+            color: red;
+            font-size: 0.875rem;
+        }
+
+        /* Pre "Súhlasím s" */
+        .form-check-label {
+            color: #fff !important;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .form-check-label a {
+            color: #FF5733;
+            text-decoration: none;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* Odkazy */
+        a {
+            text-decoration: none;
+            color: #0066cc;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Návrh */
+        @media (max-width: 768px) {
+            header {
+                width: 95%;
+                padding: 10px 10px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            /* Upravené pozície tlačidiel */
+            #profile-btn {
+                right: 80px;
+                top: 20px;
+            }
+
+            #users-management-btn {
+                right: 20px;
+                top: 110px;
+            }
+
+            #logout-btn {
+                right: 200px;
+                top: 90px;
+            }
         }
     </style>
 </head>
@@ -162,32 +334,42 @@
     <div class="background-overlay"></div>
 @endif
 
-<!-- Tlačítko prihlásenia, ktoré bude fixované v pravom hornom rohu -->
-@auth
-    <li>
-        <a href="{{ url('/profile') }}" class="text-white hover:text-yellow-400 transition duration-200">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m0 0l-4 4m4-4l-4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+<!-- Podmienka na zobrazenie tlačidiel prihlásenia, profilu a správy užívateľov -->
+@if (!request()->is('auth*') && !request()->is('profile*'))
+    @if (Auth::check())
+        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" id="logout-btn">
+                Odhlásiť sa
+            </button>
+        </form>
+        <a href="{{ route('profile.show') }}" id="profile-btn">
+            Môj profil
         </a>
-    </li>
-@else
-    <button id="login-btn" class="fixed top-4 right-4 text-white bg-black hover:bg-gray-700 py-2 px-4 rounded-full transition duration-200">
-        Prihlásiť sa
-    </button>
-@endauth
+
+        @if (Auth::user()->isAdmin)
+            <a href="{{ route('admin.users.index') }}" id="users-management-btn">
+                Správa Užívateľov
+            </a>
+        @endif
+    @else
+        <a href="{{ route('auth.auth', ['type' => 'login']) }}" id="login-btn">
+            Prihlásiť sa
+        </a>
+    @endif
+@endif
 
 <!-- Navigačný panel -->
-<header class="bg-black bg-opacity-60 shadow-md rounded-lg w-full fixed top-0 left-0 z-50">
-    <nav class="max-w-screen-lg mx-auto p-4">
-        <ul class="flex justify-between sm:justify-center items-center gap-4">
-            <li><a href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}" alt="logo" class="h-16 w-auto"></a></li>
-            <li><a href="{{ url('/') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Hlavná stránka</a></li>
-            <li><a href="{{ url('/DailyMenu') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Denné menu</a></li>
-            <li><a href="{{ url('/Orders') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Objednávky</a></li>
-            <li><a href="{{ url('/Reservations') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Rezervácie</a></li>
-            <li><a href="{{ url('/PhotoGallery') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Fotogaléria</a></li>
-            <li><a href="{{ url('/Contact') }}" class="text-white font-semibold hover:text-yellow-400 transition duration-200">Kontakt</a></li>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{{ url('/') }}"><img src="{{ asset('images/logo.png') }}" alt="logo"></a></li>
+            <li><a href="{{ url('/') }}">Hlavná stránka</a></li>
+            <li><a href="{{ url('/DailyMenu') }}">Denné menu</a></li>
+            <li><a href="{{ url('/Orders') }}">Objednávky</a></li>
+            <li><a href="{{ url('/Reservations') }}">Rezervácie</a></li>
+            <li><a href="{{ url('/PhotoGallery') }}">Fotogaléria</a></li>
+            <li><a href="{{ url('/Contact') }}">Kontakt</a></li>
         </ul>
     </nav>
 </header>
@@ -198,54 +380,10 @@
 
 <footer class="bg-gray-800 text-white text-center p-4">
     <p>&copy; 2024 Gazdovský dvor. Všetky práva vyhradené.</p>
-    <p><a href="{{ url('/privacy') }}" class="text-white hover:underline">Ochrana osobných údajov</a> | <a href="{{ url('/terms') }}" class="text-white hover:underline">Podmienky použitia</a></p>
+    <p><a href="{{ url('/privacy') }}">Ochrana osobných údajov</a> | <a href="{{ url('/terms') }}">Podmienky použitia</a></p>
 </footer>
 
-<!-- Modálne okno pre prihlásenie -->
-<div id="login-modal" class="modal">
-    <div class="modal-content">
-        <span id="close-login-modal" class="close-btn">&times;</span>
-        <h2 class="text-center text-xl font-semibold">Prihlásiť sa</h2>
-        <form action="{{ route('login.submit') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label for="email" class="block text-sm">Email</label>
-                <input type="email" name="email" id="email" class="input-field" required>
-            </div>
-            <div class="mb-4">
-                <label for="password" class="block text-sm">Heslo</label>
-                <input type="password" name="password" id="password" class="input-field" required>
-            </div>
-            <button type="submit" class="btn-submit">Prihlásiť sa</button>
-        </form>
-    </div>
-</div>
-
-<!-- JavaScript pre modálne okná -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const loginBtn = document.getElementById('login-btn');
-        const loginModal = document.getElementById('login-modal');
-        const closeLoginModalBtn = document.getElementById('close-login-modal');
-
-        // Ukáž modálne okno pri kliknutí na tlačidlo "Prihlásiť sa"
-        loginBtn.addEventListener('click', function() {
-            loginModal.style.display = 'flex';  // Zobraz modálne okno
-        });
-
-        // Skryť modálne okno pri kliknutí na tlačidlo "Zatvoriť"
-        closeLoginModalBtn.addEventListener('click', function() {
-            loginModal.style.display = 'none';  // Skry modálne okno
-        });
-
-        // Skryť modálne okno pri kliknutí mimo okna
-        window.addEventListener('click', function(event) {
-            if (event.target === loginModal) {
-                loginModal.style.display = 'none';  // Skry modálne okno
-            }
-        });
-    });
-</script>
+@yield('scripts')
 
 </body>
 </html>

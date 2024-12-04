@@ -9,6 +9,8 @@ html, body {
     height: 100%;
     margin: 0;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
@@ -16,8 +18,6 @@ body {
     background-color: #1a1a1a;
     color: #ffffff;
     line-height: 1.6;
-    display: flex;
-    flex-direction: column;
     overflow-x: hidden;
 }
 
@@ -25,60 +25,7 @@ body {
 main {
     flex: 1;
     padding: 20px;
-}
-
-/* Hlavný navigačný panel */
-header {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 0;
-    text-align: center;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-}
-
-/* Navigačný panel - list */
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 0;
-    margin: 0;
-}
-
-/* Navigačný odkaz */
-nav ul li a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 8px 16px;
-    transition: background 0.3s, color 0.3s;
-    background: transparent;
-    border-radius: 5px;
-}
-
-nav ul li a img {
-    height: 60px;
-    width: auto;
-    vertical-align: middle;
-}
-
-/* Zabezpečenie väčšej medzery medzi logom a textom */
-nav ul li:first-child {
-    margin-right: 30px;
-}
-
-/* Hover efekt na navigačných odkazoch */
-nav ul li a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffd700;
+    overflow: auto;
 }
 
 /* Footer */
@@ -88,6 +35,7 @@ footer {
     text-align: center;
     padding: 10px 20px;
     font-size: 0.8rem;
+    margin-top: auto;
 }
 
 footer a {
@@ -99,163 +47,397 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Kontrolky formulára */
-.reservation-form {
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    border-radius: 5px;
-    margin: 20px auto;
-    max-width: 600px;
-    width: 90%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.reservation-form input,
-.reservation-form select,
-.reservation-form button {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.reservation-form button {
-    background-color: #ffd700;
-    color: black;
-    cursor: pointer;
-}
-
-.reservation-form button:hover {
-    background-color: #e6c300;
-}
-
-/* Animácia a efekt pre modálne okná */
-.modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #333;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    display: none; /* Skryté pred zobrazením */
-    z-index: 100;
-}
-
-.modal.show {
-    display: block; /* Zobraziť modálne okno */
-}
-
-/* Skryté modálne okno */
-.modal {
-    display: none; /* Skryté na začiatku */
-    align-items: center;
-    justify-content: center;
+/* Hlavný navigačný panel */
+header {
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999; /* Zabezpečí, že modálne okno je nad ostatným obsahom */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    z-index: 1000;
+    width: 90%;
+    max-width: 1200px; /* Maximálna šírka pre navigačný panel */
 }
 
-/* Pozadie modálneho okna */
-.modal > div {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 100%;
+/* Navigačný panel - list */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Navigačný odkaz */
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 8px 16px;
+    transition: background 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+nav ul li a img {
+    height: 40px;
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Hover efekt na navigačných odkazoch */
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffd700;
+}
+
+/* Tlačidlá prihlásenia, profilu a správy užívateľov */
+#login-btn, #profile-btn, #users-management-btn, #logout-btn {
+    position: fixed;
+    top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1001;
 }
 
 #login-btn {
-    /* Umiestnenie tlačítka fixované v pravom hornom rohu */
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
     background-color: #000;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    color: #fff;
+    right: 20px;
+}
+
+#profile-btn {
+    background-color: #28a745;
+    color: #fff;
+    right: 160px;
+}
+
+#users-management-btn {
+    background-color: #007bff;
+    color: #fff;
+    right: 300px;
+}
+
+#logout-btn {
+    background-color: #dc3545;
+    color: #fff;
+    right: 440px;
 }
 
 #login-btn:hover {
     background-color: #333;
 }
 
-/* Zatvoriť modálne okno */
-#close-modal-btn {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+#profile-btn:hover {
+    background-color: #218838;
+}
+
+#users-management-btn:hover {
+    background-color: #0069d9;
+}
+
+#logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* Pozadie */
+.background-full {
+    background-size: cover;
+    background-position: center;
     position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-/* TOTO JE DOCASNE LEN PRE UPRAVU V BASE.BLADE.PHP, styles.css budem cely musiet prerabat lebo som uz strateny v tom*/
-/* Zabezpečenie, že footer bude vždy na spodku */
-html, body {
-    height: 100%;  /* Celková výška stránky bude 100% */
-    margin: 0;
-    display: flex;
-    flex-direction: column;  /* Flexbox, aby sme mohli footer prichytiť na spodok */
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #1a1a1a;
-    color: #ffffff;
-    line-height: 1.6;
-}
-
-main {
-    flex: 1;  /* Toto zabezpečí, že hlavný obsah zaberá všetok dostupný priestor */
-    padding: 20px;
-    overflow: auto;
-}
-
-footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 20px;
-    font-size: 0.8rem;
-    margin-top: auto;  /* Toto zabezpečí, že footer bude na spodku */
-}
-
-/* Modálne okno štýl */
-.modal {
-    display: none; /* Skryté podľa predvolieb */
-    position: fixed;
-    z-index: 1050;
-    left: 0;
     top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+}
+
+.background-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Polopriesvitný tmavý pozadie */
-    justify-content: center;
-    align-items: center;
+    z-index: -1;
 }
 
-.modal-content {
-    background-color: white;
+/* Formulárové Polia a Karty */
+.card {
+    background-color: #1a1a1a;
+    border-radius: 15px;
     padding: 30px;
-    border-radius: 10px;
-    width: 300px;
-    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
+.card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.form-control {
+    height: 45px;
+    border-radius: 5px;
+    border: 1px solid #4CAF50;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-size: 1rem;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: #FF5733;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.6);
+    background-color: #333;
+}
+
+/* Submit Button */
+.btn-block {
+    border-radius: 5px;
+    font-size: 16px;
     cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-block:hover {
+    background-color: #3e8e41;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin: 0 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin: 0 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Chybová Správa */
+.invalid-feedback {
+    color: red;
+    font-size: 0.875rem;
+}
+
+/* Pre "Súhlasím s" */
+.form-check-label {
+    color: #fff !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.form-check-label a {
+    color: #FF5733;
+    text-decoration: none;
+}
+
+.form-check-label a:hover {
+    text-decoration: underline;
+}
+
+/* Odkazy */
+a {
+    text-decoration: none;
+    color: #0066cc;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Tabuľka pre admin rezervácie */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #fff;
+}
+
+.table thead {
+    background-color: #333;
+}
+
+.table thead th {
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #4CAF50;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #1a1a1a;
+}
+
+.table td {
+    padding: 10px;
+    border-bottom: 1px solid #4CAF50;
+}
+
+/* Alerty */
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.alert-success {
+    background-color: #28a745;
+}
+
+.alert-danger {
+    background-color: #dc3545;
+}
+
+/* Titulky a kontajnery */
+h1, h2, h3 {
+    color: #fff;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    header {
+        width: 95%;
+        padding: 10px 10px;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #profile-btn {
+        right: 80px;
+    }
+
+    #users-management-btn {
+        right: 140px;
+    }
+
+    #logout-btn {
+        right: 200px;
+    }
+}
+
+/* CSS pre profilové sekcie */
+.profile-container {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+}
+
+.profile-container h1 {
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.profile-details p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+.edit-profile-btn {
+    margin-top: 20px;
+}
+
+.edit-profile-container {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+}
+
+.edit-profile-container h1 {
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    background-color: #1a1a1a;
+    color: #ddd;
+    border: 1px solid #444;
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    background-color: #1a1a1a;
+    color: #fff;
+    border-color: #555;
+}
+
+.btn-primary, .btn-danger {
+    margin-right: 10px;
+}
+
+.delete-account-btn {
+    margin-top: 30px;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #ff6b6b;
+}
+
+/* posun dole elementu*/
+.top-odseknutie {
+    margin-top: 100px;
 }

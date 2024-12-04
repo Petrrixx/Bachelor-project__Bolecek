@@ -1,78 +1,46 @@
 <?php
+
 namespace App\Services;
 
 use PHPSupabase\Service;
-use PHPSupabase\Auth;
-use PHPSupabase\Database;
+use Exception;
 
 class SupabaseService
 {
     protected $service;
-    protected $auth;
     protected $database;
 
     public function __construct()
     {
+        // Inicializácia služby pre pripojenie k Supabase
         $this->service = new Service(
-            env('SUPABASE_KEY'),
+            env('SUPABASE_API_KEY'),
             env('SUPABASE_URL')
         );
 
-        $this->auth = $this->service->createAuth();
-        $this->database = $this->service->createDatabase();
+        // Inicializácia databázy pre pripojenie k tabuľke 'reservations'
+        $this->database = $this->service->initializeDatabase('reservations', 'id');
     }
 
-    // Vytvorenie používateľa
-    public function createUser($email, $password, $user_metadata = [])
+    // Funkcia na vloženie novej rezervácie
+    public function createReservation($reservationData)
     {
         try {
-            $this->auth->createUserWithEmailAndPassword($email, $password, $user_metadata);
-            return 'User has been created!';
-        } catch (\Exception $e) {
-            return $this->auth->getError();
-        }
-    }
-
-    // Prihlásenie používateľa
-    public function signInUser($email, $password)
-    {
-        try {
-            $this->auth->signInWithEmailAndPassword($email, $password);
-            $data = $this->auth->data();
+            $data = $this->database->insert([$reservationData]); // Vloženie dát do tabuľky 'reservations'
             return $data;
-        } catch (\Exception $e) {
-            return $this->auth->getError();
+        } catch (Exception $e) {
+            return 'Error: ' . $e->getMessage();
         }
     }
 
-    // Aktualizácia údajov o používateľovi
-    public function updateUserData($access_token, $updateData)
+    // Funkcia na načítanie všetkých rezervácií
+    public function getAllReservations()
     {
         try {
-            $this->auth->setBearerToken($access_token);
-            // Predpokladáme, že používateľ je uložený v databáze a má unikátny ID
-            $userId = $this->auth->getUser($access_token)['id'];
-            $userTable = $this->database->from('users');
-            $userTable->update($updateData)->where('id', '=', $userId);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    // Vymazanie používateľa
-    public function deleteUser($access_token)
-    {
-        try {
-            $this->auth->setBearerToken($access_token);
-            $userId = $this->auth->getUser($access_token)['id'];
-            // Vymažeme používateľa z databázy
-            $this->database->from('users')->delete()->where('id', '=', $userId);
-            // Tiež vymažeme používateľa z Auth služby
-            $this->auth->deleteUser();
-            return true;
-        } catch (\Exception $e) {
-            return false;
+            $data = $this->database->fetchAll(); // Načítanie všetkých rezervácií
+            return $data;
+        } catch (Exception $e) {
+            return 'Error: ' . $e->getMessage();
         }
     }
 }

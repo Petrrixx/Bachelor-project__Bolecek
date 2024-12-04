@@ -1,26 +1,24 @@
+version: '3.8'
+
 services:
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile-app  # Tento Dockerfile pre PHP (Laravel aplikáciu)
-        container_name: laravel_app
-        ports:
-            - "8000:80"  # Laravel bude dostupný na localhost:8000
-        volumes:
-            - .:/var/www/html
+    mysql:
+        image: mysql:8.0
+        container_name: reservations-mysql
         environment:
-            DB_CONNECTION: pgsql
-            DB_HOST: ${DB_HOST}  # Pripojenie na Supabase
-            DB_PORT: ${DB_PORT}
-            DB_DATABASE: ${DB_DATABASE}
-            DB_USERNAME: ${DB_USERNAME}
-            DB_PASSWORD: ${DB_PASSWORD}
-            DB_SCHEMA: ${DB_SCHEMA}
-            SUPABASE_URL: ${SUPABASE_URL}
-            SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: reservations_db
+            MYSQL_USER: reservations_user
+            MYSQL_PASSWORD: reservations_pass
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
         networks:
-            - app_network  # Táto sieť bude automaticky vytvorená Dockerom
+            - mysql_network
+
+volumes:
+    mysql_data:
 
 networks:
-    app_network:  # Definujeme sieť, ale nemusíme špecifikovať driver, ak nevyžaduje konkrétny
+    mysql_network:
         driver: bridge

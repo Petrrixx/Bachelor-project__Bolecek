@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div style="margin-top: 50px">
+    <div style="margin-top: 100px">
         <h1>Vitajte na stránke Gazdovského dvora!</h1>
         <p>Toto je stránka pre kontakty.</p>
     </div>
