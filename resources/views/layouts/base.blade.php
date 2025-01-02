@@ -379,7 +379,7 @@
 </main>
 
 <footer class="bg-gray-800 text-white text-center p-4">
-    <p>&copy; 2024 Gazdovský dvor. Všetky práva vyhradené.</p>
+    <p>&copy; 2025 Gazdovský dvor. Všetky práva vyhradené.</p>
     <p><a href="{{ url('/privacy') }}">Ochrana osobných údajov</a> | <a href="{{ url('/terms') }}">Podmienky použitia</a></p>
 </footer>
 
