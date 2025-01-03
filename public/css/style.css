@@ -4,19 +4,19 @@ body, h1, h2, p, ul {
     padding: 0;
 }
 
-/* Základ */
+/* Základ layoutu */
 html, body {
     height: 100%;
     margin: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    background-color: #1a1a1a; /* Tmavé pozadie */
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #1a1a1a;
-    color: #ffffff;
+    color: #ffffff; /* Primárne biely text na tmavom pozadí */
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -28,13 +28,14 @@ main {
     overflow: auto;
 }
 
-/* Footer */
+/* ------- FOOTER MENŠÍ NA VÝŠKU ------- */
 footer {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 10px 20px;
-    font-size: 0.8rem;
+    /* zmenšíme padding, aby footer nebol taký vysoký */
+    padding: 5px 10px;
+    font-size: 0.75rem;
     margin-top: auto;
 }
 
@@ -46,7 +47,7 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
-    color: #ffd700; /* Jemne zlatá farba pri hover */
+    color: #ffd700;
 }
 
 /* Hlavný navigačný panel */
@@ -61,7 +62,7 @@ header {
     border-radius: 5px;
     z-index: 1000;
     width: 90%;
-    max-width: 1200px; /* Maximálna šírka pre navigačný panel */
+    max-width: 1200px;
     transition: background 0.2s ease;
 }
 
@@ -97,13 +98,13 @@ nav ul li a img {
     vertical-align: middle;
 }
 
-/* Hover efekt na navigačných odkazoch */
 nav ul li a:hover {
     background: rgba(255, 255, 255, 0.2);
     color: #ffd700;
 }
 
-/* Tlačidlá prihlásenia, profilu a správy užívateľov */
+/* Tlačidlá prihlásenia, profilu, správy atď.
+   (Ak nechceš fixed, vieš to odstrániť) */
 #login-btn, #profile-btn, #users-management-btn, #logout-btn {
     position: fixed;
     padding: 10px 20px;
@@ -115,7 +116,6 @@ nav ul li a:hover {
     font-size: 0.9rem;
 }
 
-/* Pozície tlačidiel */
 #login-btn {
     background-color: #000;
     color: #fff;
@@ -141,7 +141,6 @@ nav ul li a:hover {
     top: 90px;
 }
 
-/* Hover efekty na tlačidlách */
 #login-btn:hover {
     background-color: #333;
     transform: translateY(-2px);
@@ -159,7 +158,7 @@ nav ul li a:hover {
     transform: translateY(-2px);
 }
 
-/* Pozadie */
+/* Pozadie celé */
 .background-full {
     background-size: cover;
     background-position: center;
@@ -180,40 +179,25 @@ nav ul li a:hover {
     z-index: -1;
 }
 
-/* Formulárové Polia a Karty */
+/* ---------- KARTA pre Auth -----------
+   Samotné .card pozadie a text farby rieši bootstrap triedy: bg-light text-dark
+   Tu len doplníme tieň a radius ak chceme */
 .card {
-    background-color: #1a1a1a;
-    border-radius: 15px;
-    padding: 30px;
+    border-radius: 10px !important; /* zrušíme inline style v .blade */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
-.card-body {
-    padding: 20px;
-    text-align: center;
-}
-
-/* Vylepšený vzhľad inputov */
+/* Inputy vo forme */
 .form-control {
-    height: 45px;
-    border-radius: 5px;
-    border: 1px solid #4CAF50;
-    background-color: #2a2a2a;
-    color: #fff;
-    font-size: 1rem;
-    padding-left: 15px;
-    margin-bottom: 15px;
-    width: 100%;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-control:focus {
     border-color: #FF5733;
-    box-shadow: 0 0 10px rgba(255, 87, 51, 0.6);
-    background-color: #333;
+    box-shadow: 0 0 10px rgba(255, 87, 51, 0.4);
 }
 
-/* Submit Button */
+/* Tlačidlá priamo v .card (.btn-block) */
 .btn-block {
     border-radius: 5px;
     font-size: 16px;
@@ -223,6 +207,8 @@ nav ul li a:hover {
     background-color: #4CAF50;
     color: #fff;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .btn-block:hover {
@@ -230,78 +216,29 @@ nav ul li a:hover {
     transform: translateY(-2px);
 }
 
-.btn-primary {
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: inline-block;
-    margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-primary:hover {
-    background-color: #0069d9;
-    transform: translateY(-2px);
-}
-
-.btn-success {
-    background-color: #28a745;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    margin: 0 5px;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-success:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    margin: 0 5px;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    transform: translateY(-2px);
-}
-
-/* Chybová Správa */
+/* .invalid-feedback – text chyby */
 .invalid-feedback {
-    color: #ff6b6b;
+    color: #d9534f;
     font-size: 0.875rem;
     text-align: left;
 }
 
-/* Pre "Súhlasím s" */
+/* .form-check – checkbox label nech je text-dark */
 .form-check-label {
-    color: #fff !important;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    color: #343a40 !important; /* .text-dark z bootstrapu */
 }
 
+/* Linky v check label */
 .form-check-label a {
-    color: #FF5733;
+    color: #007bff;
     text-decoration: none;
 }
-
 .form-check-label a:hover {
     text-decoration: underline;
+    color: #0056b3;
 }
 
-/* Odkazy */
+/* Linky všeobecne */
 a {
     text-decoration: none;
     color: #0066cc;
@@ -313,7 +250,7 @@ a:hover {
     color: #ffd700;
 }
 
-/* Tabuľka pre admin rezervácie */
+/* Tabuľka pre admin rezervácie - ostáva tmavá */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -370,93 +307,45 @@ h1, h2, h3 {
     margin: 0 auto;
 }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
     header {
         width: 95%;
         padding: 10px;
     }
-
     nav ul {
         flex-direction: column;
         gap: 10px;
     }
-
     #profile-btn {
         right: 80px;
     }
-
     #users-management-btn {
         right: 140px;
         top: 110px;
     }
-
     #logout-btn {
         right: 200px;
         top: 90px;
     }
 }
 
-/* Profilové sekcie */
-.profile-container {
-    margin-top: 50px;
-    padding: 20px;
-    background-color: #2a2a2a;
-    border-radius: 10px;
+/* Ak by si chcel menšie písmo pri extrémnom zmenšení/zoome: */
+@media (max-width: 400px) {
+    body {
+        font-size: 0.9rem;
+    }
 }
 
-.profile-container h1 {
-    margin-bottom: 30px;
-    color: #fff;
-}
-
-.profile-details p {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-    color: #ddd;
-}
-
-.edit-profile-btn {
-    margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.edit-profile-btn:hover {
-    transform: translateY(-2px);
-    background-color: #007bff;
-}
-
-.edit-profile-container {
-    margin-top: 50px;
-    padding: 20px;
-    background-color: #2a2a2a;
-    border-radius: 10px;
-}
-
-.edit-profile-container h1 {
-    margin-bottom: 30px;
-    color: #fff;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.delete-account-btn {
-    margin-top: 30px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.delete-account-btn:hover {
-    transform: translateY(-2px);
-    background-color: #c82333;
-}
-
-.invalid-feedback {
+/* Obrázky fluidne */
+img {
+    max-width: 100%;
+    height: auto;
     display: block;
-    color: #ff6b6b;
 }
 
-/* posun dole elementu*/
-.top-odseknutie {
-    margin-top: 100px;
+.card.bg-light.text-dark .form-check-label {
+    color: #000 !important;
 }
+
+

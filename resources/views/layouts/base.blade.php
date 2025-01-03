@@ -46,12 +46,12 @@
         }
         @endif
 
-        /* Zabezpečenie, že footer bude vždy na spodku */
+        /* pár úprav oproti styles.css */
         html, body {
             height: 100%;
             margin: 0;
             display: flex;
-            flex-direction: column;  /* Flexbox, aby sme mohli footer prichytiť na spodok */
+            flex-direction: column;
         }
 
         body {
@@ -62,21 +62,19 @@
             overflow-x: hidden;
         }
 
-        /* Hlavný obsah */
         main {
             flex: 1;  /* Toto zabezpečí, že hlavný obsah zaberá všetok dostupný priestor */
             padding: 20px;
             overflow: auto;
         }
 
-        /* Footer */
         footer {
             background-color: #333;
             color: #fff;
             text-align: center;
             padding: 10px 20px;
             font-size: 0.8rem;
-            margin-top: auto;  /* Toto zabezpečí, že footer bude na spodku */
+            margin-top: auto;
         }
 
         footer a {
@@ -161,7 +159,7 @@
         #profile-btn {
             background-color: #28a745;
             color: #fff;
-            right: 30px; /* Upravená pozícia */
+            right: 30px;
             top: 20px;
         }
 
@@ -175,7 +173,7 @@
         #logout-btn {
             background-color: #dc3545;
             color: #fff;
-            right: 20px; /* Upravená pozícia */
+            right: 20px;
             top: 90px;
         }
 
@@ -270,7 +268,7 @@
 
         /* Pre "Súhlasím s" */
         .form-check-label {
-            color: #fff !important;
+            color: #000 !important;
             font-size: 0.95rem;
             line-height: 1.5;
         }
