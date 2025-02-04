@@ -4,6 +4,15 @@
 
 @section('content')
     <div class="contact-container">
+        <!-- Pridanie ikonky obálky pre adminov -->
+        @if(Auth::check() && Auth::user()->isAdmin)
+            <div class="text-right mb-3">
+                <a href="{{ route('contact.admin') }}" class="btn btn-primary">
+                    <i class="bi bi-envelope"></i> Mailbox
+                </a>
+            </div>
+        @endif
+
         <div class="contact-content">
             <!-- Obrázky na ľavej strane -->
             <div class="contact-images">
@@ -79,24 +88,25 @@
             <div id="map"></div>
             <a href="https://www.google.com/maps?q=48.8486284,18.0274924" target="_blank" class="map-link">Otvoriť mapu v Google Maps</a>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @section('scripts')
-        <!-- Leaflet pre mapu -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <script>
-            // Inicializácia mapy
-            const map = L.map('map').setView([48.8486284, 18.0274924], 16); // Súradnice a zoom
+@section('scripts')
+    <!-- Leaflet pre mapu -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Inicializácia mapy PODLA INTERNETU
+        const map = L.map('map').setView([48.8486284, 18.0274924], 16); // Súradnice a zoom
 
-            // Pridanie OpenStreetMap vrstvy
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+        // Pridanie OpenStreetMap vrstvy
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-            // Pridanie značky pre reštauráciu
-            const marker = L.marker([48.8486284, 18.0274924]).addTo(map)
-                .bindPopup('Gazdovský dvor<br>Trenčianska Turná')
-                .openPopup();
-        </script>
+        // Pridanie značky pre reštauráciu
+        const marker = L.marker([48.8486284, 18.0274924]).addTo(map)
+            .bindPopup('Gazdovský dvor<br>Trenčianska Turná')
+            .openPopup();
+    </script>
 @endsection

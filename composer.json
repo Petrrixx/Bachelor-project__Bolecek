@@ -10,7 +10,8 @@
         "vlucas/phpdotenv": "^5.5.0",
         "lcobucci/jwt": "^4.0",
         "symfony/var-dumper": "^7.0",
-        "rafaelwendel/phpsupabase": "^0.0.8"
+        "rafaelwendel/phpsupabase": "^0.0.8",
+        "nesbot/carbon": "^3.8"
     },
     "autoload": {
         "psr-4": {
@@ -19,7 +20,10 @@
     },
     "config": {
         "preferred-install": "dist",
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "scripts": {
         "post-autoload-dump": [
