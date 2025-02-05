@@ -1,3 +1,4 @@
+/* NAZVY A POUZITIE STYLOV INSPIROVANE PODLA YOUTUBE A GUIDE STRANOK */
 /* Reset */
 body, h1, h2, p, ul {
     margin: 0;
@@ -135,37 +136,37 @@ nav ul li a:hover {
     top: 20px;
 }
 #profile-btn {
-    background-color: #28a745;
+    /* background-color: #28a745; */
     color: #fff;
     right: 30px;
     top: 20px;
 }
 #users-management-btn {
-    background-color: #007bff;
+    /* background-color: #007bff; */
     color: #fff;
     right: 20px;
-    top: 150px;
+    top: 100px;
 }
 #logout-btn {
-    background-color: #dc3545;
+    /* background-color: #dc3545; */
     color: #fff;
     right: 20px;
-    top: 90px;
+    top: 60px;
 }
 #login-btn:hover {
     background-color: #333;
     transform: translateY(-2px);
 }
 #profile-btn:hover {
-    background-color: #218838;
+    /* background-color: #218838; */
     transform: translateY(-2px);
 }
 #users-management-btn:hover {
-    background-color: #0069d9;
+    /* background-color: #0069d9; */
     transform: translateY(-2px);
 }
 #logout-btn:hover {
-    background-color: #c82333;
+    /* background-color: #c82333; */
     transform: translateY(-2px);
 }
 

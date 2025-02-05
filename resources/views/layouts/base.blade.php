@@ -24,13 +24,21 @@
 <!-- Panel pre prihlásenie, profil a správu užívateľov -->
 @if (!request()->is('auth*') && !request()->is('profile*'))
     @if (Auth::check())
+        <a href="{{ route('profile.show') }}" id="profile-btn">
+            <i class="bi bi-person"></i> Profil
+        </a>
+
         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
             @csrf
-            <button type="submit" id="logout-btn">Odhlásiť sa</button>
+            <button type="submit" id="logout-btn">
+                <i class="bi bi-box-arrow-right"></i> Odhlásiť sa
+            </button>
         </form>
-        <a href="{{ route('profile.show') }}" id="profile-btn">Môj profil</a>
+
         @if (Auth::user()->isAdmin)
-            <a href="{{ route('admin.users.index') }}" id="users-management-btn">Správa Užívateľov</a>
+            <a href="{{ route('admin.users.index') }}" id="users-management-btn">
+                <i class="bi bi-gear"></i> User Databáza
+            </a>
         @endif
     @else
         <a href="{{ route('auth.auth', ['type' => 'login']) }}" id="login-btn">Prihlásiť sa</a>
@@ -53,6 +61,12 @@
 </header>
 
 <main class="pt-24 pb-8">
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @yield('content')
 </main>
 

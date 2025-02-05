@@ -14,8 +14,8 @@
         }
         /* Jednotlivé položky galérie – fixná veľkosť */
         .gallery-item {
-            flex: 0 0 300px; /* Fixná šírka 300px */
-            height: 200px;   /* Fixná výška 200px */
+            flex: 0 0 300px;
+            height: 200px;
             overflow: hidden;
             cursor: pointer;
         }
@@ -183,7 +183,7 @@
                 }
             });
 
-            /* Global pole pre akumuláciu súborov */
+            /* Global pole pre akumuláciu súborov - PODLA INTERNETU*/
             let selectedFiles = [];
 
             /* Modal pre nahrávanie obrázka (iba pre adminov) */

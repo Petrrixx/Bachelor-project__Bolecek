@@ -23,6 +23,7 @@ class Order extends Model
         'order_time',
         'status',
         'notes',
+        'order_type',
     ];
 
     // Prípadné pretypovania

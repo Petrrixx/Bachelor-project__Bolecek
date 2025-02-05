@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PhotoGalleryController extends Controller
 {
     public function upload(Request $request)
     {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
+        }
+
         $request->validate([
             'images.*' => 'required|file|mimes:jpeg,jpg,png|max:2048'
         ]);

@@ -4,7 +4,7 @@
 
 @section('content')
     <style>
-        /* Štýly pre tabuľku rezervácií */
+        /* Štýly pre tabuľku rezervácií - NIEKTORE CASTI PODLA INTERNETU (MAM POPISANE)*/
         table.table-striped {
             width: 100%;
             border-collapse: separate;

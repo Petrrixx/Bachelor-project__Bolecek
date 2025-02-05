@@ -11,18 +11,30 @@ class ProfileController extends Controller
 
     public function show()
     {
+        if (!Auth::check()) {
+            return redirect()->route('index')->with('error', 'Nemáte prístup.');
+        }
+
         $user = Auth::user();
         return view('profile.show', compact('user'));
     }
 
     public function edit()
     {
+        if (!Auth::check()) {
+            return redirect()->route('index')->with('error', 'Nemáte prístup.');
+        }
+
         $user = Auth::user();
         return view('profile.edit', compact('user'));
     }
 
     public function update(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('index')->with('error', 'Nemáte prístup.');
+        }
+
         $user = Auth::user();
 
         // Validácia údajov
@@ -46,6 +58,10 @@ class ProfileController extends Controller
 
     public function destroy()
     {
+        if (!Auth::check()) {
+            return redirect()->route('index')->with('error', 'Nemáte prístup.');
+        }
+
         $user = Auth::user();
 
         // Vymazanie používateľa

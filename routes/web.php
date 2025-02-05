@@ -62,38 +62,36 @@ Route::post('/profile', [ProfileController::class, 'update'])->name('profile.upd
 //}); NEFUNGUJE MI MIDDLEWARE
 
 // Admin Routes bez middleware isAdmin (kontrola v kontroléri)
-Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UsersController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 });
 
-Route::middleware(['auth'])->group(function () {
-    // Zobrazenie profilu
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+// Zobrazenie profilu
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 
-    // Úprava profilu
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+// Úprava profilu
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Vymazanie účtu
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Vymazanie účtu
+Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 // Hlavná stránka
 Route::get('/', function () {
     return view('index');
-});
+})->name('index');
 
 // Rezervácie
 Route::get('/Reservations', [MenuController::class, 'viewReservations']);
 
 Route::get('/reservation', [ReservationController::class, 'showForm'])->name('reservation.form');
 Route::post('/reservation/submit', [ReservationController::class, 'store'])->name('reservation.submit');
+
 // Administratívny prehľad rezervácií (len s autentifikáciou)
-Route::prefix('reservation')->middleware(['auth'])->group(function () {
-    Route::get('/admin', [ReservationController::class, 'adminIndex'])->name('reservation.admin');
-    Route::post('/{id}/approve', [ReservationController::class, 'approve'])->name('reservation.approve');
-    Route::post('/{id}/reject', [ReservationController::class, 'reject'])->name('reservation.reject');
-});
+Route::get('reservation/admin', [ReservationController::class, 'adminIndex'])->name('reservation.admin');
+Route::post('reservation/{id}/approve', [ReservationController::class, 'approve'])->name('reservation.approve');
+Route::post('reservation/{id}/reject', [ReservationController::class, 'reject'])->name('reservation.reject');
+
 Route::patch('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservation.cancel');
 Route::get('/reservations/user', [ReservationController::class, 'viewUser'])->name('reservation.user');
 
@@ -111,7 +109,6 @@ Route::delete('/menu/{id}', [JedalnyListokController::class, 'destroy'])->name('
 
 // Objednávky
 Route::get('/Orders', [MenuController::class, 'viewOrders']);
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
 // Objednávky používateľa
 Route::get('/orders/user', [OrderController::class, 'indexUser'])->name('orders.user.index');
@@ -137,21 +134,23 @@ Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders
 // Hromadné vymazanie objednávok (admin)
 Route::delete('/orders/delete-multiple', [OrderController::class, 'deleteMultiple'])->name('orders.deleteMultiple');
 
+// Úprava objednávky používateľa
+Route::patch('/orders/user/{id}', [OrderController::class, 'userUpdate'])->name('orders.user.update');
+
 // Fotogaléria
 Route::get('/PhotoGallery', [MenuController::class, 'viewPhotoGallery']);
 Route::post('/photogallery/upload', [PhotoGalleryController::class, 'upload'])->name('photogallery.upload');
 
 // Kontakty
-Route::get('/Contact', [MenuController::class, 'viewContact']);
+Route::get('/Contact', [MenuController::class, 'viewContact'])->name('contact');
 Route::get('/contact/admin', [ContactController::class, 'adminMailbox'])->name('contact.admin');
 // Kontaktný formulár
 Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
 Route::get('/contact/message/{id}', [ContactController::class, 'getMessage'])->name('contact.message');
 
 // Admin rozhranie pre správy
-Route::middleware('auth')->group(function () {
-    Route::get('/contact/messages', [ContactController::class, 'indexAdmin'])->name('contact.messagesAdmin');
-    Route::get('/contact/messages/{id}', [ContactController::class, 'showAdmin'])->name('contact.messageDetail');
-    Route::delete('/contact/messages/{id}', [ContactController::class, 'destroy'])->name('contact.messageDelete');
-    Route::delete('/contact/messages/delete-multiple', [ContactController::class, 'deleteMultiple'])->name('contact.messagesDeleteMultiple');
-});
+Route::get('/contact/messages', [ContactController::class, 'indexAdmin'])->name('contact.messagesAdmin');
+Route::get('/contact/messages/{id}', [ContactController::class, 'showAdmin'])->name('contact.messageDetail');
+Route::delete('/contact/messages/{id}', [ContactController::class, 'destroy'])->name('contact.messageDelete');
+Route::delete('/contact/messages/delete-multiple', [ContactController::class, 'deleteMultiple'])->name('contact.messagesDeleteMultiple');
+Route::delete('/contact/delete-all', [ContactController::class, 'deleteAll'])->name('contact.deleteAll');

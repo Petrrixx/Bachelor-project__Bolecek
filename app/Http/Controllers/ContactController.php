@@ -46,7 +46,7 @@ class ContactController extends Controller
     public function indexAdmin(Request $request)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('home')->with('error', 'Nemáte prístup.');
+            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $query = Message::query();
@@ -90,7 +90,7 @@ class ContactController extends Controller
     public function showAdmin($id)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('home')->with('error', 'Nemáte prístup.');
+            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $message = Message::find($id);
@@ -104,7 +104,7 @@ class ContactController extends Controller
     public function destroy($id)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
         }
 
         $message = Message::find($id);
@@ -120,10 +120,10 @@ class ContactController extends Controller
         return response()->json(['message' => 'Správa bola vymazaná.'], 200);
     }
 
-    public function deleteMultiple(Request $request)
+    public function deleteMultiple(Request $request) // nepoužitá
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
         }
 
         $ids = $request->input('ids');
@@ -158,6 +158,23 @@ class ContactController extends Controller
         return response()->json(['message' => 'Vybrané správy boli vymazané.'], 200);
     }
 
+    public function deleteAll()
+    {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
+        }
+
+        // Načítať všetky správy
+        $messages = Message::all();
+
+        // Pre každú správu zavoláme tú istú logiku vymazania
+        foreach ($messages as $message) {
+            $this->deleteSingleMessage($message);
+        }
+
+        return response()->json(['message' => 'Všetky správy boli vymazané.'], 200);
+    }
+
     public function getMessage($id)
     {
         $message = Message::findOrFail($id);
@@ -166,6 +183,10 @@ class ContactController extends Controller
 
     public function adminMailbox()
     {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
+        }
+
         $messages = Message::all();
 
         return view('contact.contactAdmin', compact('messages'));

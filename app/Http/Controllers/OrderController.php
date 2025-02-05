@@ -7,12 +7,10 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+
 class OrderController extends Controller
 {
-    /**
-     * Uloženie novej objednávky.
-     * POST /orders
-     */
+    // Vytvorenie objednávky (pre všetkých používateľov)
     public function store(Request $request)
     {
         if (!Auth::check()) {
@@ -22,26 +20,31 @@ class OrderController extends Controller
         $validated = $request->validate([
             'order_date' => 'required|date',
             'order_time' => 'required|date_format:H:i',
+            'order_type' => 'required|in:Osobný odber,Rozvoz',
             'notes'      => 'nullable|string',
         ]);
 
-        // Overenie, či je zvolený čas medzi 10:00 a 15:00
-        $orderTime = Carbon::createFromFormat('H:i', $validated['order_time']);
+        // Konverzia času z HH:MM na HH:MM:SS
+        $formattedTime = Carbon::createFromFormat('H:i', $validated['order_time'])->format('H:i:s');
+
+        // Overenie, či je zvolený čas medzi 10:00 a 15:00 (používame pôvodnú hodnotu HH:MM)
+        $orderTimeCheck = Carbon::createFromFormat('H:i', $validated['order_time']);
         $minTime   = Carbon::createFromFormat('H:i', '10:00');
         $maxTime   = Carbon::createFromFormat('H:i', '15:00');
-        if ($orderTime->lessThan($minTime) || $orderTime->greaterThan($maxTime)) {
+        if ($orderTimeCheck->lessThan($minTime) || $orderTimeCheck->greaterThan($maxTime)) {
             return response()->json(['message' => 'Čas objednávky musí byť medzi 10:00 a 15:00.'], 422);
         }
 
         $order = Order::create([
             'user_id'    => Auth::id(),
             'order_date' => $validated['order_date'],
-            'order_time' => $validated['order_time'],
+            'order_time' => $formattedTime,
             'status'     => 'PENDING',
             'notes'      => $validated['notes'] ?? null,
+            'order_type' => $validated['order_type'],
         ]);
 
-        // Nastavenie dátumu/času vytvorenia, ak databáza to nerieši automaticky
+        // Nastavenie dátumu/času vytvorenia – tieto stĺpce máme samostatne
         $order->created_date = Carbon::now()->toDateString();
         $order->created_time = Carbon::now()->format('H:i:s');
         $order->save();
@@ -52,26 +55,26 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /**
-     * Úprava objednávky používateľom.
-     * PATCH /orders/{id}
-     */
+    // Celková update metóda (ak by sa používala aj inde)
     public function update(Request $request, $id)
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
         }
 
         $order = Order::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
+
         if (!$order) {
             return response()->json(['message' => 'Objednávka nebola nájdená alebo vám nepatrí.'], 404);
         }
 
+        // Tu sa aktualizuje celý záznam – aj dátum
         $validated = $request->validate([
             'order_date' => 'required|date',
             'order_time' => 'required|date_format:H:i',
+            'order_type' => 'required|in:Osobný odber,Rozvoz',
             'notes'      => 'nullable|string',
         ]);
 
@@ -82,8 +85,11 @@ class OrderController extends Controller
             return response()->json(['message' => 'Čas objednávky musí byť medzi 10:00 a 15:00.'], 422);
         }
 
+        $formattedTime = $orderTime->format('H:i:s');
+
         $order->order_date = $validated['order_date'];
-        $order->order_time = $validated['order_time'];
+        $order->order_time = $formattedTime;
+        $order->order_type = $validated['order_type'];
         $order->notes      = $validated['notes'] ?? $order->notes;
         $order->save();
 
@@ -93,10 +99,56 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /**
-     * Zrušenie objednávky používateľom (nastavením statusu na CANCELED).
-     * PATCH /orders/{id}/cancel
-     */
+    // Update objednávky pre používateľa – aktualizuje len čas, typ objednávky a poznámky; dátum sa nemení
+    public function userUpdate(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
+        }
+
+        $order = Order::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Objednávka nebola nájdená alebo vám nepatrí.'], 404);
+        }
+
+        // Ak je objednávka už ACCEPTED alebo DECLINED, nepovoľujeme úpravu
+        if (in_array($order->status, ['ACCEPTED', 'DECLINED'])) {
+            return response()->json([
+                'message' => 'Objednávku nemožno upravovať, pretože už bola akceptovaná alebo odmietnutá.'
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'order_time' => 'required|date_format:H:i',
+            'order_type' => 'required|in:Osobný odber,Rozvoz',
+            'notes'      => 'nullable|string',
+        ]);
+
+        $orderTime = Carbon::createFromFormat('H:i', $validated['order_time']);
+        $minTime   = Carbon::createFromFormat('H:i', '10:00');
+        $maxTime   = Carbon::createFromFormat('H:i', '15:00');
+        if ($orderTime->lessThan($minTime) || $orderTime->greaterThan($maxTime)) {
+            return response()->json(['message' => 'Čas objednávky musí byť medzi 10:00 a 15:00.'], 422);
+        }
+
+        $formattedTime = $orderTime->format('H:i:s');
+
+        // Dátum sa nemení, aktualizujeme len čas, typ a poznámky
+        $order->order_time = $formattedTime;
+        $order->order_type = $validated['order_type'];
+        $order->notes      = $validated['notes'] ?? $order->notes;
+        $order->save();
+
+        return response()->json([
+            'message' => 'Objednávka bola upravená.',
+            'order'   => $order,
+        ], 200);
+    }
+
+    // Zrušenie objednávky používateľom
     public function cancel(Request $request, $id)
     {
         if (!Auth::check()) {
@@ -106,6 +158,7 @@ class OrderController extends Controller
         $order = Order::where('id', $id)
             ->where('user_id', Auth::id())
             ->first();
+
         if (!$order) {
             return response()->json(['message' => 'Objednávka nebola nájdená alebo vám nepatrí.'], 404);
         }
@@ -119,10 +172,7 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /**
-     * Zobrazenie objednávok aktuálne prihláseného používateľa.
-     * GET /orders/user
-     */
+    // Zobrazenie objednávok pre používateľa (index)
     public function indexUser()
     {
         if (!Auth::check()) {
@@ -137,25 +187,15 @@ class OrderController extends Controller
         return view('orders.ordersUser', compact('orders'));
     }
 
-    /**
-     * Zobrazenie objednávok pre administrátora s pokročilým filtrovaním.
-     * GET /orders/admin
-     *
-     * Filteruje sa podľa:
-     * - Dátum: 'date_from' a 'date_to'
-     * - Čas: 'time_from' a 'time_to'
-     * - Stav: pole 'status_filter[]' (napr. PENDING, ACCEPTED, DECLINED, CANCELED)
-     * - Triedenie: 'sort_order' s hodnotami "earliest" (order_time ASC) alebo "latest" (order_time DESC)
-     */
+    // Ďalšie metódy (indexAdmin, updateStatus, destroy, deleteMultiple) ostávajú nezmenené…
     public function indexAdmin(Request $request)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('home')->with('error', 'Nemáte prístup.');
+            return redirect()->route('index')->with('error', 'Nemáte prístup.');
         }
 
         $query = Order::with('user');
 
-        // Filtrovanie podľa dátumu (interval)
         if ($request->filled('date_from') && $request->filled('date_to')) {
             $query->whereBetween('order_date', [$request->date_from, $request->date_to]);
         } elseif ($request->filled('date_from')) {
@@ -164,7 +204,6 @@ class OrderController extends Controller
             $query->where('order_date', '<=', $request->date_to);
         }
 
-        // Filtrovanie podľa času (interval)
         if ($request->filled('time_from') && $request->filled('time_to')) {
             $query->whereBetween('order_time', [$request->time_from, $request->time_to]);
         } elseif ($request->filled('time_from')) {
@@ -173,7 +212,6 @@ class OrderController extends Controller
             $query->where('order_time', '<=', $request->time_to);
         }
 
-        // Filtrovanie podľa stavu (checkboxy)
         if ($request->filled('status_filter')) {
             $statuses = $request->status_filter;
             if (!is_array($statuses)) {
@@ -182,7 +220,6 @@ class OrderController extends Controller
             $query->whereIn('status', $statuses);
         }
 
-        // Triedenie – podľa času objednávky (najskoršie / najstaršie)
         if ($request->filled('sort_order')) {
             if ($request->sort_order === 'earliest') {
                 $query->orderBy('order_time', 'asc');
@@ -190,7 +227,6 @@ class OrderController extends Controller
                 $query->orderBy('order_time', 'desc');
             }
         } else {
-            // Predvolený rad: najnovšie vytvorené objednávky
             $query->orderBy('created_date', 'desc')
                 ->orderBy('created_time', 'desc');
         }
@@ -204,17 +240,10 @@ class OrderController extends Controller
         return view('orders.ordersAdmin', compact('orders'));
     }
 
-    /**
-     * Aktualizácia stavu objednávky administrátorom.
-     * PATCH /orders/{id}/update-status
-     *
-     * Povolené stavy: PENDING, ACCEPTED, DECLINED
-     * (ak je objednávka zrušená, aktualizácia nie je povolená)
-     */
     public function updateStatus(Request $request, $id)
     {
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
         }
 
         $validated = $request->validate([
@@ -239,14 +268,10 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /**
-     * Fyzické vymazanie objednávky administrátorom.
-     * DELETE /orders/{id}
-     */
     public function destroy($id)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
         }
 
         $order = Order::query()->find($id);
@@ -258,18 +283,10 @@ class OrderController extends Controller
         return response()->json(['message' => 'Objednávka bola vymazaná.'], 200);
     }
 
-    /**
-     * Hromadné fyzické vymazanie objednávok administrátorom.
-     * DELETE /orders/delete-multiple
-     */
-    /**
-     * Hromadné fyzické vymazanie objednávok administrátorom.
-     * DELETE /orders/delete-multiple
-     */
     public function deleteMultiple(Request $request)
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Nemáte oprávnenie'], 401);
         }
 
         $ids = $request->input('ids');
@@ -302,4 +319,3 @@ class OrderController extends Controller
         return response()->json(['message' => 'Vybrané objednávky boli vymazané.'], 200);
     }
 }
-

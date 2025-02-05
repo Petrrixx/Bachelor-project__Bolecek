@@ -5,7 +5,7 @@
 @section('content')
     <div class="content text-center mt-8 px-4 sm:px-8">
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold">Vitajte na stránke Gazdovského dvora!</h1>
-        <p class="text-lg sm:text-xl md:text-2xl mt-4">Toto je úvodná stránka.</p>
+        <!-- <p class="text-lg sm:text-xl md:text-2xl mt-4">Toto je úvodná stránka.</p> -->
     </div>
 
     <!-- Dokonalá kombinácia príchutí -->
@@ -84,7 +84,7 @@
 @endsection
 
 @section('scripts')
-    <!-- Leaflet pre mapu -->
+    <!-- Leaflet pre mapu *PODLA INTERNETU*-->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>

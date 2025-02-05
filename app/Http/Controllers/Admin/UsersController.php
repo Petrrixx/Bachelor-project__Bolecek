@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash; // Pre hashovanie hesla
 
 class UsersController extends Controller
@@ -12,8 +13,8 @@ class UsersController extends Controller
     public function index()
     {
         // Kontrola, či je aktuálny používateľ administrátor
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $users = User::all();
@@ -22,8 +23,8 @@ class UsersController extends Controller
 
     public function create()
     {
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         return view('admin.users.create');
@@ -31,8 +32,8 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         // Validácia údajov
@@ -60,8 +61,8 @@ class UsersController extends Controller
 
     public function edit($id)
     {
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $user = User::findOrFail($id);
@@ -71,8 +72,8 @@ class UsersController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $user = User::findOrFail($id);
@@ -109,8 +110,8 @@ class UsersController extends Controller
 
     public function destroy($id)
     {
-        if (!auth()->user()->isAdmin) {
-            abort(403, 'Unauthorized');
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
         }
 
         $user = User::findOrFail($id);

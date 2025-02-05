@@ -78,7 +78,7 @@
             </table>
         </div>
 
-        <!-- Ak si admin, zobraz administratívny pohľad -->
+        <!-- Ak som admin, zobrazí administratívny pohľad -->
         @if(Auth::check() && Auth::user()->isAdmin)
             <div class="admin-view mt-8">
                 <a href="{{ route('menu.admin') }}" class="btn btn-warning">Administratívny pohľad</a>

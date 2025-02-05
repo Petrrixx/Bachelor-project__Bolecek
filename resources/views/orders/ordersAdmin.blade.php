@@ -6,7 +6,7 @@
     <div class="container" style="margin-top:100px;">
         <h1>Administrácia objednávok</h1>
         <!-- Tlačidlá pre výber, hromadné vymazanie a filter -->
-        <div style="margin-bottom:20px;">
+        <div style="margin-bottom:20px; padding-right: 15px;">
             <button id="toggleSelectBtn" class="btn btn-secondary">Vybrať</button>
             <button id="deleteSelectedBtn" class="btn btn-danger" style="display:none;">Vymazať vybrané</button>
             <button id="toggleFilterBtn" class="btn btn-info" style="padding-left: 15px">Filtrovať</button>
@@ -139,6 +139,7 @@
 
 @section('scripts')
     <script>
+        // PODLA INTERNETU
         document.addEventListener('DOMContentLoaded', function() {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
@@ -185,7 +186,7 @@
                             })
                             .then(data => {
                                 const row = document.getElementById('adminOrderRow' + orderId);
-                                row.cells[5].innerText = data.order.status;
+                                row.cells[6].innerText = data.order.status;
                                 if (row.querySelector('.accept-btn')) row.querySelector('.accept-btn').remove();
                                 if (row.querySelector('.decline-btn')) row.querySelector('.decline-btn').remove();
                             })
@@ -212,7 +213,7 @@
                             })
                             .then(data => {
                                 const row = document.getElementById('adminOrderRow' + orderId);
-                                row.cells[5].innerText = data.order.status;
+                                row.cells[6].innerText = data.order.status;
                                 if (row.querySelector('.accept-btn')) row.querySelector('.accept-btn').remove();
                                 if (row.querySelector('.decline-btn')) row.querySelector('.decline-btn').remove();
                             })

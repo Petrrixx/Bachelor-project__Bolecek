@@ -4,7 +4,7 @@
 
 @section('content')
     <style>
-        /* Nové štýly pre lepšie rozostupy v tabuľkách */
+        /* Nové štýly pre lepšie rozostupy v tabuľkách - PODLA INTERNETU POPISANE STYLY*/
         table.table-striped {
             width: 100%;
             border-collapse: separate;

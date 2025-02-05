@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reservation;
+use \Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -39,12 +40,20 @@ class ReservationController extends Controller
 
     public function adminIndex()
     {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
+        }
+
         $reservations = Reservation::orderBy('date', 'desc')->orderBy('time', 'desc')->get();
         return view('reservation.reservationsAdmin', compact('reservations'));
     }
 
     public function approve($id)
     {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
+        }
+
         $reservation = Reservation::findOrFail($id);
         $reservation->accept = true;
         $reservation->save();
@@ -54,6 +63,10 @@ class ReservationController extends Controller
 
     public function reject($id)
     {
+        if (!Auth::check() || !Auth::user()->isAdmin) {
+            return redirect()->route('index')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
+        }
+
         $reservation = Reservation::findOrFail($id);
         $reservation->delete();
 

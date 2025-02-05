@@ -44,8 +44,8 @@
                     <div>
                         <label for="order_type">Typ objednávky:</label>
                         <select name="order_type" id="order_type" class="form-control" required>
-                            <option value="osobny_odber">Osobný odber</option>
-                            <option value="rozvoz">Rozvoz</option>
+                            <option value="Osobný odber">Osobný odber</option>
+                            <option value="Rozvoz">Rozvoz</option>
                         </select>
                     </div>
 
