@@ -13,54 +13,44 @@
             border-radius: 8px;
             margin: 0 auto; /* Centrovanie modalu */
         }
-
         .modal-header {
             border-bottom: 1px solid #4CAF50;
         }
-
         .modal-footer {
             border-top: 1px solid #4CAF50;
         }
-
         .btn-close {
             filter: invert(1);
         }
-
         /* Maximalizovaný modal */
         .modal-maximized {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         /* Blur efekt pre pozadie */
         .modal-backdrop-blur {
             backdrop-filter: blur(5px);
             background-color: rgba(0, 0, 0, 0.5);
         }
-
         /* Skrytie modalu na začiatku */
         #messageModal {
             display: none;
         }
-
         #messageModal.show {
             display: block;
         }
-
         /* Zrušenie pridávania padding-right na body */
         body.modal-open {
             padding-right: 0 !important;
             overflow: auto !important;
         }
-
         /* Centrovanie modalu */
         .modal-dialog-centered {
             display: flex;
             align-items: center;
             min-height: calc(100% - 1rem);
         }
-
         .modal-content {
             margin: 0 auto;
         }
@@ -71,7 +61,7 @@
 
         <!-- Hlavná akčná lišta s tlačidlom pre vymazanie všetkých správ -->
         <div class="d-flex justify-content-end mb-3">
-            <button id="deleteAllBtn" class="btn btn-danger">
+            <button type="button" id="deleteAllBtn" class="btn btn-danger">
                 <i class="bi bi-trash"></i> Vymazať všetky správy
             </button>
         </div>
@@ -93,11 +83,11 @@
                         <td>{{ $message->email }}</td>
                         <td>{{ $message->subject }}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm view-message" data-id="{{ $message->id }}" data-bs-toggle="modal" data-bs-target="#messageModal">
+                            <button type="button" class="btn btn-primary btn-sm view-message" data-id="{{ $message->id }}">
                                 <i class="bi bi-eye"></i> Zobraziť
                             </button>
                             <!-- Individuálna ikona pre vymazanie správy -->
-                            <button class="btn btn-danger btn-sm delete-message" data-id="{{ $message->id }}">
+                            <button type="button" class="btn btn-danger btn-sm delete-message" data-id="{{ $message->id }}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
@@ -141,15 +131,14 @@
 
 @section('scripts')
     <script>
-        // Predpokladám, že v layoute máš meta tag s CSRF tokenom:
-        // <meta name="csrf-token" content="{{ csrf_token() }}">
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         // AJAX pre načítanie obsahu správy
         document.querySelectorAll('.view-message').forEach(button => {
             button.addEventListener('click', function() {
                 const messageId = this.getAttribute('data-id');
-                fetch(`/contact/messages/${messageId}`)
+                // Použijeme endpoint, ktorý vráti JSON (napr. /contact/get-message/{id})
+                fetch(`/contact/get-message/${messageId}`)
                     .then(response => response.json())
                     .then(data => {
                         // Naplnenie modalu dátami
@@ -159,19 +148,18 @@
                         document.getElementById('messageSubject').textContent = data.subject;
                         document.getElementById('messageText').textContent = data.message;
 
-                        // Naplnenie príloh
+                        // Naplnenie príloh (ak existuje príloha)
                         const attachmentsList = document.getElementById('attachmentsList');
                         attachmentsList.innerHTML = ''; // Vyčistenie zoznamu
-                        if (data.attachments && data.attachments.length > 0) {
-                            data.attachments.forEach(attachment => {
-                                const listItem = document.createElement('li');
-                                const link = document.createElement('a');
-                                link.href = attachment.url;
-                                link.textContent = attachment.name;
-                                link.target = '_blank';
-                                listItem.appendChild(link);
-                                attachmentsList.appendChild(listItem);
-                            });
+                        if (data.attachment) {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            // Predpokladáme, že 'attachment' obsahuje cestu k súboru uloženému v storage
+                            link.href = `/storage/${data.attachment}`;
+                            link.textContent = 'Príloha';
+                            link.target = '_blank';
+                            listItem.appendChild(link);
+                            attachmentsList.appendChild(listItem);
                         } else {
                             attachmentsList.innerHTML = '<li>Žiadne prílohy</li>';
                         }
@@ -211,10 +199,9 @@
         });
 
         // Vymazanie všetkých správ
-        // Vymazanie všetkých správ
         document.getElementById('deleteAllBtn').addEventListener('click', function() {
             if (confirm('Naozaj chcete vymazať všetky správy?')) {
-                fetch(`/contact/delete-all`, {  // URL upravená na /contact/delete-all
+                fetch(`/contact/delete-all`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -223,7 +210,7 @@
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Vyprázdnime obsah tabuľky
+                            // Vyprázdniť obsah tabuľky
                             document.querySelector('#messagesTable tbody').innerHTML = '';
                         } else {
                             throw new Error('Chyba pri vymazávaní všetkých správ.');
@@ -232,6 +219,5 @@
                     .catch(error => console.error(error));
             }
         });
-
     </script>
 @endsection

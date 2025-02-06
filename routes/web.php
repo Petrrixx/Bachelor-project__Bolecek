@@ -154,3 +154,5 @@ Route::get('/contact/messages/{id}', [ContactController::class, 'showAdmin'])->n
 Route::delete('/contact/messages/{id}', [ContactController::class, 'destroy'])->name('contact.messageDelete');
 Route::delete('/contact/messages/delete-multiple', [ContactController::class, 'deleteMultiple'])->name('contact.messagesDeleteMultiple');
 Route::delete('/contact/delete-all', [ContactController::class, 'deleteAll'])->name('contact.deleteAll');
+Route::get('/contact/get-message/{id}', [ContactController::class, 'getMessage'])->name('contact.getMessage');
+
