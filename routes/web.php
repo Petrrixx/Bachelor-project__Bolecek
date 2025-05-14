@@ -45,7 +45,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\JedalnyListokController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PhotoGalleryController;
-
+use App\Mail\TestEmail;
 
 // Autentifikačné trasy
 Route::get('/auth', [AuthController::class, 'showAuthForm'])->name('auth.auth');
@@ -104,26 +104,28 @@ Route::get('/menu/admin', [JedalnyListokController::class, 'indexAdmin'])->name(
 Route::get('/menu/create', [JedalnyListokController::class, 'create'])->name('menu.create');
 Route::post('/menu', [JedalnyListokController::class, 'store'])->name('menu.store');
 Route::get('/menu/{id}/edit', [JedalnyListokController::class, 'edit'])->name('menu.edit');
-Route::patch('/menu/{id}', [JedalnyListokController::class, 'update'])->name('menu.update');
+Route::put('/menu/{id}', [JedalnyListokController::class, 'update'])->name('menu.update');
 Route::delete('/menu/{id}', [JedalnyListokController::class, 'destroy'])->name('menu.destroy');
 
 // Objednávky
 Route::get('/Orders', [MenuController::class, 'viewOrders']);
 
 // Objednávky používateľa
-Route::get('/orders/user', [OrderController::class, 'indexUser'])->name('orders.user.index');
+//Route::get('/orders/user', [OrderController::class, 'indexUser'])->name('orders.user.index');
 
 // Objednávky admina
 Route::get('/orders/admin', [OrderController::class, 'indexAdmin'])->name('orders.admin.index');
 
+Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
+
 // Vytvorenie objednávky
-Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+Route::post('orders', [OrderController::class, 'store'])->name('orders.store');
 
 // Úprava objednávky (používateľ)
 Route::patch('/orders/{id}', [OrderController::class, 'update'])->name('orders.update');
 
 // Zrušenie objednávky (používateľ – len status)
-Route::patch('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+//Route::patch('/orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
 // Aktualizácia statusu (admin)
 Route::patch('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
@@ -138,8 +140,15 @@ Route::delete('/orders/delete-multiple', [OrderController::class, 'deleteMultipl
 Route::patch('/orders/user/{id}', [OrderController::class, 'userUpdate'])->name('orders.user.update');
 
 // Fotogaléria
-Route::get('/PhotoGallery', [MenuController::class, 'viewPhotoGallery']);
-Route::post('/photogallery/upload', [PhotoGalleryController::class, 'upload'])->name('photogallery.upload');
+Route::get('/photo-gallery',  [PhotoGalleryController::class, 'index'])
+     ->name('photogallery.index');
+
+Route::post('/photo-gallery', [PhotoGalleryController::class, 'store'])
+     ->name('photogallery.store');
+
+Route::delete('/photo-gallery/{publicId}', [PhotoGalleryController::class, 'destroy'])
+     ->name('photogallery.destroy');
+
 
 // Kontakty
 Route::get('/Contact', [MenuController::class, 'viewContact'])->name('contact');
@@ -156,3 +165,15 @@ Route::delete('/contact/messages/delete-multiple', [ContactController::class, 'd
 Route::delete('/contact/delete-all', [ContactController::class, 'deleteAll'])->name('contact.deleteAll');
 Route::get('/contact/get-message/{id}', [ContactController::class, 'getMessage'])->name('contact.getMessage');
 
+
+// Mail TESTING
+//Route::get('/mail-test', function () {
+//    $name = 'Reštaurácia Gazdovský Dvor';
+//    Mail::to('rejzho@gmail.com')->send(new TestEmail($name));
+//});
+
+//Potvrdenie žiadosti o rezerváciu - TESTING
+//Route::get('/mail-confirm-reservation', function () {
+//    $name = 'Reštaurácia Gazdovský Dvor';
+//    Mail::to($receiverMail)->send(new TestEmail($name));
+//});

@@ -17,6 +17,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // V tomto prípade nemusíte nič pridávať
+        
     }
 }

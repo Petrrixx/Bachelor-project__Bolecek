@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', "Denné menu")
+@section('title', "Jedálny lístok")
 
 @section('content')
     <div class="content-wrapper text-center p-4">

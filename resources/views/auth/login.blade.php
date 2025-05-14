@@ -60,9 +60,11 @@
                         </form>
 
                         <!-- Link na registráciu -->
+                         <!-- ZATIAL PREC
                         <div class="mt-3 text-center">
                             <p>Nemáte účet? <a href="{{ route('auth.form', ['type' => 'register']) }}">Zaregistrujte sa</a></p>
                         </div>
+                        --> 
                     </div>
                 </div>
             </div>

@@ -6,120 +6,34 @@ use Illuminate\Http\Request;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactFormMail;
 
 class ContactController extends Controller
 {
     public function submit(Request $request)
     {
-        // Validácia dát
         $validated = $request->validate([
-            'name'    => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'phone'   => 'required|string|max:20',
-            'email'   => 'required|email|max:255',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-            'attachment' => 'nullable|file|max:2048', // Max 2MB
+            'name'     => 'required|string|max:255',
+            'surname'  => 'required|string|max:255',
+            'phone'    => 'required|string|max:50',
+            'email'    => 'required|email',
+            'subject'  => 'required|string|max:255',
+            'message'  => 'required|string',
+            'attachment' => 'nullable|file|max:10240', // do 10MB
         ]);
 
-        // Uloženie prílohy (ak bola pridaná)
-        $attachmentPath = null;
-        if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
-        }
+        // Pošleme mail na prevádzkový email
+        Mail::to(config('mail.from.address'))
+            ->send(new ContactFormMail($validated, $request->file('attachment')));
 
-        // Vytvorenie a uloženie správy do databázy
-        $message = Message::create([
-            'name'       => $validated['name'],
-            'surname'    => $validated['surname'],
-            'phone'      => $validated['phone'],
-            'email'      => $validated['email'],
-            'subject'    => $validated['subject'],
-            'message'    => $validated['message'],
-            'attachment' => $attachmentPath,
-        ]);
-
-        // Presmerovanie s úspešnou správou
-        return redirect()->back()->with('success', 'Správa bola úspešne odoslaná.');
+        return back()->with('success', 'Vaša správa bola odoslaná.');
     }
+}
 
-    public function indexAdmin(Request $request)
-    {
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
-        }
+    // Future development, zatiaľ nepoužité
 
-        $query = Message::query();
-
-        // Filtrovanie podľa dátumu (interval)
-        if ($request->filled('date_from') && $request->filled('date_to')) {
-            $query->whereBetween('created_at', [$request->date_from, $request->date_to]);
-        } elseif ($request->filled('date_from')) {
-            $query->where('created_at', '>=', $request->date_from);
-        } elseif ($request->filled('date_to')) {
-            $query->where('created_at', '<=', $request->date_to);
-        }
-
-        // Filtrovanie podľa e-mailu
-        if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->email . '%');
-        }
-
-        // Filtrovanie podľa predmetu
-        if ($request->filled('subject')) {
-            $query->where('subject', 'like', '%' . $request->subject . '%');
-        }
-
-        // Triedenie – podľa dátumu vytvorenia
-        if ($request->filled('sort_order')) {
-            $query->orderBy('created_at', $request->sort_order);
-        } else {
-            // Predvolené triedenie: najnovšie správy
-            $query->orderBy('created_at', 'desc');
-        }
-
-        $messages = $query->get();
-
-        if ($request->wantsJson()) {
-            return response()->json(['messages' => $messages], 200);
-        }
-
-        return view('contact.messagesAdmin', compact('messages'));
-    }
-
-    public function showAdmin($id)
-    {
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
-        }
-
-        $message = Message::find($id);
-        if (!$message) {
-            return redirect()->route('contact.messagesAdmin')->with('error', 'Správa nebola nájdená.');
-        }
-
-        return view('contact.messageDetail', compact('message'));
-    }
-
-    public function destroy($id)
-    {
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            return response()->json(['message' => 'Nemáte oprávnenie.'], 401);
-        }
-
-        $message = Message::find($id);
-        if (!$message) {
-            return response()->json(['message' => 'Správa nebola nájdená.'], 404);
-        }
-
-        if ($message->attachment) {
-            Storage::disk('public')->delete($message->attachment);
-        }
-
-        $message->delete();
-        return response()->json(['message' => 'Správa bola vymazaná.'], 200);
-    }
-
+    /*
     public function deleteMultiple(Request $request) // nepoužitá
     {
         if (!Auth::check() || !Auth::user()->isAdmin) {
@@ -174,21 +88,4 @@ class ContactController extends Controller
 
         return response()->json(['message' => 'Všetky správy boli vymazané.'], 200);
     }
-
-    public function getMessage($id)
-    {
-        $message = Message::findOrFail($id);
-        return response()->json($message);
-    }
-
-    public function adminMailbox()
-    {
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            return redirect()->route('contact')->with('error', 'Nemáte oprávnenie na prístup k tejto stránke.');
-        }
-
-        $messages = Message::all();
-
-        return view('contact.contactAdmin', compact('messages'));
-    }
-}
+    */

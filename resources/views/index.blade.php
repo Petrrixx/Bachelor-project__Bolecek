@@ -33,7 +33,7 @@
                 <div class="md:w-1/2 p-4 relative">
                     <img src="{{ asset('images/background.png') }}" alt="Služby" class="w-full h-auto rounded-lg">
                     <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                        <p class="text-white text-2xl font-bold text-center p-4">
+                        <p class="text-white text-1xl text-center p-4">
                             Vyberte si zo širokej ponuky našich profesionálnych služieb. Garancia spokojnosti a najvyššej kvality.
                         </p>
                     </div>
@@ -51,7 +51,7 @@
                         <img src="{{ asset('images/reservation.jpg') }}" alt="Rezervácie" class="w-full h-32 object-cover rounded-lg">
                         <p class="mt-2 text-lg font-semibold">Rezervácie</p>
                     </a>
-                    <a href="{{ url('/PhotoGallery') }}" class="text-center">
+                    <a href="{{ url('/photo-gallery') }}" class="text-center">
                         <img src="{{ asset('images/gallery.jpg') }}" alt="Fotogaléria" class="w-full h-32 object-cover rounded-lg">
                         <p class="mt-2 text-lg font-semibold">Fotogaléria</p>
                     </a>

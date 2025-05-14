@@ -50,6 +50,7 @@ footer {
 }
 
 footer.visible {
+    display: block visible !important;
     bottom: 0;
 }
 
@@ -314,13 +315,27 @@ h1, h2, h3 {
 /* Responsive */
 @media (max-width: 768px) {
     header {
-        width: 95%;
-        padding: 10px;
+        position: static;
+        transform: none;
+        left: auto;
+        top: auto;
+        border-radius: 0;
+        width: 100%;
+        padding: 4px 10px;
+        box-shadow: none;
     }
     nav ul {
         flex-direction: column;
-        gap: 10px;
+        gap: 4px;
     }
+    nav ul li a {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+    main {
+        padding-top: 20px;
+    }
+    /*
     #profile-btn {
         right: 80px;
         top: 20px;
@@ -333,6 +348,7 @@ h1, h2, h3 {
         right: 200px;
         top: 90px;
     }
+        */
 }
 
 /* Menšie písmo pri extrémnom zmenšení/zoome */

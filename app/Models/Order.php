@@ -10,37 +10,38 @@ class Order extends Model
 {
     use HasFactory;
 
-    // Explicitne určíme názov tabuľky
-    protected $table = 'orders';
-
-    // Nepoužívame štandardné Laravel timestampy, lebo máme vlastné stĺpce pre dátum a čas vytvorenia
+    // Nepoužívame defaultné timestamps, máme vlastné stĺpce
     public $timestamps = false;
 
-    // Ktoré atribúty môžeme hromadne priraďovať
+    // Explicitný názov tabuľky
+    protected $table = 'orders';
+
+    // Hromadné priraďovanie
     protected $fillable = [
-        'user_id',
+        'user_fullname',
+        'user_email',
+        'user_contact',
         'order_date',
         'order_time',
-        'status',
-        'notes',
         'order_type',
+        'delivery_address',
+        'notes',
+        'status',
+        'created_date',
+        'created_time',
     ];
 
-    // Prípadné pretypovania
+    // Casty pre dátumy
     protected $casts = [
-        'order_date' => 'date',
-        // Pre order_time nie je natívny cast "time", takže môžeš ho spracovávať ako string alebo pomocou Carbon v accesoroch
+        'order_date'   => 'date',
+        'created_date' => 'date',
     ];
 
-    // Ak chceš pridať pomocnú metódu na formátovaný čas objednávky
-    public function getFormattedOrderTimeAttribute()
+    /**
+     * Pomocný accessor na formátovaný čas objednávky (HH:mm)
+     */
+    public function getFormattedOrderTimeAttribute(): string
     {
         return Carbon::parse($this->order_time)->format('H:i');
-    }
-
-    // Vzťah – objednávka patrí používateľovi
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }

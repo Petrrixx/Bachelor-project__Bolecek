@@ -75,7 +75,7 @@
     </style>
 
     <div class="container mt-5">
-        <div class="card">
+        <!-- <div class="card"> -->
             <div class="card-body">
                 <h1 class="mb-4">Správa Rezervácií</h1>
 
@@ -92,6 +92,7 @@
                             <th>ID</th>
                             <th>Meno</th>
                             <th>Email</th>
+                            <th>Telefón</th>
                             <th>Dátum</th>
                             <th>Čas</th>
                             <th>Počet hostí</th>
@@ -105,6 +106,7 @@
                                 <td>{{ $reservation->id }}</td>
                                 <td>{{ $reservation->name }}</td>
                                 <td>{{ $reservation->email }}</td>
+                                <td>{{ $reservation->user_contact }}</td>
                                 <td>{{ \Carbon\Carbon::parse($reservation->date)->format('d.m.Y') }}</td>
                                 <td>{{ $reservation->formatted_time }}</td>
                                 <td>{{ $reservation->guests }}</td>
@@ -135,7 +137,7 @@
                     </table>
                 @endif
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 @endsection
 

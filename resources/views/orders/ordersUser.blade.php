@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('title', "Moje objednávky")
-
+<!-- Zobrazujeme len objednávky používateľa, ktorý je prihlásený, MOMENTALNE SA NEPOUZIVA -->
 @section('content')
     <div class="container" style="margin-top:100px;">
         <h1>Moje objednávky</h1>

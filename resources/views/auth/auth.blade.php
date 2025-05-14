@@ -38,18 +38,20 @@
                                 <div class="form-check text-left">
                                     <input type="checkbox" class="form-check-input" id="remember" name="remember"
                                         {{ old('remember') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="remember">Zapamätať si ma</label>
+                                    <label class="form-check-label" for="remember">Zapamätať si ma (W.I.P)</label>
                                 </div>
 
                                 <div class="text-center mt-3">
                                     <button type="submit" class="btn btn-primary btn-block">Prihlásiť sa</button>
                                 </div>
                             </form>
+                            <!--
                             <div class="mt-3 text-center">
                                 <p>Nemáte účet?
                                     <a href="{{ route('auth.auth', ['type' => 'register']) }}">Zaregistrujte sa</a>
                                 </p>
                             </div>
+                            -->
                         </div>
 
                         <!-- Registrácia -->
